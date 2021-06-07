@@ -30,7 +30,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 	@Override
 	public FinancingPlanBO executeSimulateInsuranceQuotationInstallmentPlan(FinancingPlanBO input, String traceId) {
 		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan START *****");
-		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan ***** Params: {} - {}", input);
+		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan Param: {} *****", input);
 
 		FinancingPlanBO output = null;
 
