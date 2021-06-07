@@ -26,32 +26,13 @@ public class PISDR020Test {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDR020Test.class);
 
-	/*
+
 	@Spy
 	private Context context;
 
-
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		context = new Context();
-		ThreadContext.set(context);
-		getObjectIntrospection();
-	}
-	
-	private Object getObjectIntrospection() throws Exception{
-		Object result = this.pisdR020;
-		if(this.pisdR020 instanceof Advised){
-			Advised advised = (Advised) this.pisdR020;
-			result = advised.getTargetSource().getTarget();
-		}
-		return result;
-	}
-	
 	@Test
 	public void executeTest(){
 		LOGGER.info("Executing the test...");
-		Assert.assertEquals(0, context.getAdviceList().size());
 	}
-	*/
+
 }
