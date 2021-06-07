@@ -1,7 +1,5 @@
 package com.bbva.pisd.lib.r030;
 
-import com.bbva.pisd.dto.insurance.detail.EntityOutQuotationDetailDTO;
-import com.bbva.pisd.dto.insurance.detail.InputQuotationDetailDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 
 /**

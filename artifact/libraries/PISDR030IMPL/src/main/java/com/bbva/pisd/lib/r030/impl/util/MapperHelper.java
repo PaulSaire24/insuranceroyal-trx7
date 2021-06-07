@@ -3,17 +3,13 @@ package com.bbva.pisd.lib.r030.impl.util;
 import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 
 import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
-import com.bbva.pisd.dto.insurance.bo.DatoParticularBO;
 import com.bbva.pisd.dto.insurance.bo.financing.CuotaFinanciamientoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
-import com.bbva.pisd.dto.insurance.bo.simulation.InsuranceSimulationBO;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
-import com.bbva.pisd.dto.insurance.simulation.InsuranceSimulationDTO;
-import com.bbva.pisd.dto.insurance.simulation.SimulationCompanyDTO;
 
 import java.util.*;
 import java.util.stream.Collectors;

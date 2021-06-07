@@ -14,8 +14,6 @@ import org.springframework.web.client.RestClientException;
 
 import javax.ws.rs.HttpMethod;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The  interface PISDR020Impl class...
