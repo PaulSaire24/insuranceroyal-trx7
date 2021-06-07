@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<transaction xmlns="http://www.w3schools.com" transactionName="PISDT007" application="PISD" version="01" country="PE" language="ES">
+	<paramsIn>
+		<parameter order="1" name="quotationId" mandatory="1" type="String" size="20"/>
+		<parameter order="2" name="startDate" mandatory="0" type="Date (YYYY-MM-DD)" size="0"/>
+		<list order="3" name="installmentPlans" mandatory="1">
+			<dto order="1" name="Type" mandatory="0" package="com.bbva.pisd.dto.insurance.commons.InstallmentsDTO" artifactId="PISDC011">
+				<dto order="1" name="period" mandatory="1" package="com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO" artifactId="PISDC011">
+					<parameter order="1" name="id" mandatory="1" type="String" size="20"/>
+				</dto>
+			</dto>
+		</list>
+	</paramsIn>
+	<paramsOut>
+		<parameter order="1" name="startDate" mandatory="0" type="Date (YYYY-MM-DD)" size="0"/>
+		<parameter order="2" name="maturityDate" mandatory="0" type="Date (YYYY-MM-DD)" size="0"/>
+		<parameter order="3" name="totalNumberInstallments" mandatory="0" type="Long" size="4"/>
+		<list order="4" name="installmentPlans" mandatory="1">
+			<dto order="1" name="Type" mandatory="0" package="com.bbva.pisd.dto.insurance.commons.InstallmentsDTO" artifactId="PISDC011">
+				<dto order="1" name="period" mandatory="1" package="com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO" artifactId="PISDC011">
+					<parameter order="1" name="id" mandatory="1" type="String" size="20"/>
+					<parameter order="2" name="name" mandatory="0" type="String" size="20"/>
+				</dto>
+				<dto order="2" name="paymentAmount" mandatory="1" package="com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO" artifactId="PISDC011">
+					<parameter order="1" name="amount" mandatory="1" type="Double" size="15"/>
+					<parameter order="2" name="currency" mandatory="1" type="String" size="3"/>
+				</dto>
+			</dto>
+		</list>
+	</paramsOut>
+	<description>Get financing plan</description>
+</transaction>

@@ -1,4 +1,4 @@
-package com.bbva.pisd.lib.r005.impl.util;
+package com.bbva.pisd.lib.r020.impl.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

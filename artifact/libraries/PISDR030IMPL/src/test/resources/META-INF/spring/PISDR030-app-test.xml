@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+	<bean id="pisdR0305Abstract" abstract="true" class="com.bbva.pisd.lib.r30.impl.PISDR030Abstract"/>
+	<bean id="pisdR030" class="com.bbva.pisd.lib.r030.impl.PISDR030Impl" parent="pisdR030Abstract">
+		<property name="applicationConfigurationService" ref="applicationConfigurationService"/>
+		<property name="pisdR020" ref="pisdR020"/>
+		<property name="pisdR012" ref="pisdR012"/>
+		<property name="mapperHelper" ref="mapperHelper"/>
+	</bean>
+	<bean id="pisdR012" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg value="com.bbva.pisd.lib.r012.PISDR012"/>
+	</bean>
+	<bean id="applicationConfigurationService" factory-bean="applicationConfigurationServiceFactory" factory-method="getApplicationConfigurationService">
+		<constructor-arg type="org.osgi.framework.BundleContext" ref="bundleContext"/>
+	</bean>
+	<bean id="mapperHelper" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg value="com.bbva.pisd.lib.r030.impl.util.MapperHelper"/>
+	</bean>
+	<bean id="pisdR020" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg value="com.bbva.pisd.lib.r020.PISDR020"/>
+	</bean>
+</beans>

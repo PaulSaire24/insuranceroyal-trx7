@@ -12,5 +12,10 @@
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LIBRARIES-insuranceroyal-trx7</name>
-	<modules/>
+	<modules>
+		<module>PISDR020</module>
+		<module>PISDR020IMPL</module>
+		<module>PISDR030</module>
+		<module>PISDR030IMPL</module>
+	</modules>
 </project>
