@@ -58,6 +58,8 @@ public class PISDR030Test {
 
 		mockDTO = MockDTO.getInstance();
 
+		pisdr030.setApplicationConfigurationService(applicationConfigurationService);
+
 		mapperHelper = mock(MapperHelper.class);
 		pisdr030.setMapperHelper(mapperHelper);
 
@@ -97,7 +99,6 @@ public class PISDR030Test {
 		when(pisdr020.executeSimulateInsuranceQuotationInstallmentPlan(anyObject(), anyString())).thenReturn(null);
 
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
-
 		assertNull(validation);
 	}
 }
