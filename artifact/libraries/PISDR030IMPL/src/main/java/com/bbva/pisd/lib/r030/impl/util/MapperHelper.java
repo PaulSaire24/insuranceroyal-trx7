@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class MapperHelper {
 
     private final String RIMAC = "RIMAC";
+    private final String CUOTA = "CUOTA";
 
     protected ApplicationConfigurationService applicationConfigurationService;
 
@@ -33,7 +34,10 @@ public class MapperHelper {
 
     private CuotaFinanciamientoBO createCuotaFinanciamiento (InstallmentsDTO installmentsDTO) {
         CuotaFinanciamientoBO cuotaFinanciamientoBO = new CuotaFinanciamientoBO();
-        cuotaFinanciamientoBO.setPeriodo( this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId()));
+        String periodoId =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
+        String nroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
+        cuotaFinanciamientoBO.setPeriodo(periodoId);
+        cuotaFinanciamientoBO.setNroCuotas(Long.parseLong(nroCuotas));
         return cuotaFinanciamientoBO;
     }
 
