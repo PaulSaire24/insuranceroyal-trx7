@@ -35,9 +35,9 @@ public class MapperHelper {
     private CuotaFinanciamientoBO createCuotaFinanciamiento (InstallmentsDTO installmentsDTO) {
         CuotaFinanciamientoBO cuotaFinanciamientoBO = new CuotaFinanciamientoBO();
         String periodoId =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
-        String nroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
+        //String nroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
         cuotaFinanciamientoBO.setPeriodo(periodoId);
-        cuotaFinanciamientoBO.setNroCuotas(Long.parseLong(nroCuotas));
+        //cuotaFinanciamientoBO.setNroCuotas(Long.parseLong(nroCuotas));
         return cuotaFinanciamientoBO;
     }
 
