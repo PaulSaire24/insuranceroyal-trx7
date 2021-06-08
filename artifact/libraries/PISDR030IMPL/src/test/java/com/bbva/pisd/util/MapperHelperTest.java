@@ -78,6 +78,11 @@ public class MapperHelperTest {
         bank = mock(BankDTO.class);
         branch = mock(BranchDTO.class);
 
+        when(applicationConfigurationService.getProperty("RIMACMONTHLY")).thenReturn("M");
+        when(applicationConfigurationService.getProperty("RIMACSEMIANNUAL")).thenReturn("R");
+        when(applicationConfigurationService.getProperty("CUOTAMONTHLY")).thenReturn("12");
+        when(applicationConfigurationService.getProperty("CUOTASEMIANNUAL")).thenReturn("2");
+
         mapperHelper.setApplicationConfigurationService(applicationConfigurationService);
     }
 
