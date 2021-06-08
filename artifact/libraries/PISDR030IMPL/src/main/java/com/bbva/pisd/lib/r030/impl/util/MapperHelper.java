@@ -25,7 +25,7 @@ public class MapperHelper {
         FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
         List<CuotaFinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamiento(installment)).collect(Collectors.toList());
         financiamientoPayloadBO.setFinanciamiento(financiamiento);
-        financiamientoPayloadBO.setCotizacion(financingPlanDTO.getQuotationId());
+        financiamientoPayloadBO.setCotizacion(quotDetailDAO.getRimacId());
         financiamientoPayloadBO.setFechaInicioFinanciamiento(financingPlanDTO.getStartDate());
         requestRimac.setPayload(financiamientoPayloadBO);
         return requestRimac;
@@ -43,6 +43,7 @@ public class MapperHelper {
         response.setMaturityDate(responseRimac.getPayload().getFechaFin());
         response.setTotalNumberInstallments(Long.valueOf(responseRimac.getPayload().getFinanciamiento().size()));
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().getFinanciamiento().stream().map(financiamiento -> createInstallment(financiamiento)).collect(Collectors.toList());
+        response.setInstallmentPlans(installmentsDTOS);
     }
 
     private InstallmentsDTO createInstallment (CuotaFinanciamientoBO cuotaFinanciamientoBO) {
