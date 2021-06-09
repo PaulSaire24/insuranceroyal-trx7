@@ -5,6 +5,7 @@ import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.lib.r020.impl.util.JsonHelper;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -46,7 +47,9 @@ public class PISDR020Impl extends PISDR020Abstract {
 			LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan ***** Exception: {}", e.getMessage());
 			this.addAdvice(PISDErrors.ERROR_CONNECTION_SIMULATION_RIMAC_SERVICE.getAdviceCode());
 		}
-		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan ***** Response: {}", output);
+
+		Gson g = new Gson();
+		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan ***** Response: {}", g.toJson(output));
 		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan END *****");
 
 		return output;
