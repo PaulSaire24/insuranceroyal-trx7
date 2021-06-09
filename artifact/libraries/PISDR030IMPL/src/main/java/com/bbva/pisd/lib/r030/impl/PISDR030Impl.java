@@ -27,7 +27,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 		LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan START *****");
 		LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan Param: {} *****", input.getQuotationId());
 
-		FinancingPlanDTO response = null;
+		FinancingPlanDTO response = new FinancingPlanDTO();
 
 		try {
 
