@@ -41,7 +41,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 		LOGGER.info(JSON_LOG, entity.getBody());
 
 		try {
-			output = this.externalApiConnector.postForObject(PISDProperties.ID_API_SIMULATION_RIMAC.getValue(), entity, FinancingPlanBO.class);
+			output = this.externalApiConnector.postForObject("financingplan.rimac", entity, FinancingPlanBO.class);
 		} catch(RestClientException e) {
 			LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan ***** Exception: {}", e.getMessage());
 			this.addAdvice(PISDErrors.ERROR_CONNECTION_SIMULATION_RIMAC_SERVICE.getAdviceCode());
