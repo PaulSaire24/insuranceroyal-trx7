@@ -26,7 +26,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 
 
 	@Override
-	public FinancingPlanBO executeSimulateInsuranceQuotationInstallmentPlan(FinancingPlanBO input, String traceId) {
+	public FinancingPlanBO executeFinancingPlan (FinancingPlanBO input, String traceId) {
 		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan START *****");
 		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan Param: {} *****", input);
 
@@ -41,7 +41,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 		LOGGER.info(JSON_LOG, entity.getBody());
 
 		try {
-			output = this.externalApiConnector.postForObject("financingplan.rimac", entity, FinancingPlanBO.class);
+			output = this.externalApiConnector.postForObject(PISDProperties.ID_API_FINANCING_PLAN_RIMAC.getValue(), entity, FinancingPlanBO.class);
 		} catch(RestClientException e) {
 			LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan ***** Exception: {}", e.getMessage());
 			this.addAdvice(PISDErrors.ERROR_CONNECTION_SIMULATION_RIMAC_SERVICE.getAdviceCode());

@@ -7,6 +7,6 @@ import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
  */
 public interface PISDR020 {
 
-	FinancingPlanBO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanBO request, String traceId);
+	FinancingPlanBO executeFinancingPlan (FinancingPlanBO request, String traceId);
 
 }

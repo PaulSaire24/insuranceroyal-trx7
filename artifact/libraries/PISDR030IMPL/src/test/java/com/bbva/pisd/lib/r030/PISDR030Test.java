@@ -94,7 +94,7 @@ public class PISDR030Test {
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 
-		when(pisdr020.executeSimulateInsuranceQuotationInstallmentPlan(anyObject(), anyString())).thenReturn(null);
+		when(pisdr020.executeFinancingPlan(anyObject(), anyString())).thenReturn(null);
 
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 

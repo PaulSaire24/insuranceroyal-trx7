@@ -10,6 +10,9 @@ import com.bbva.pisd.dto.insurance.utils.PISDValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,6 +24,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class PISDR030Impl extends PISDR030Abstract {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDR030Impl.class);
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 	@Override
 	public FinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input) {
@@ -37,9 +41,13 @@ public class PISDR030Impl extends PISDR030Abstract {
 
 			QuotDetailDAO quotationDetails = validateGetInsuranceQuotation(responseQueryGetQuotationService);
 
+			LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan | isStartDateValid *****");
+
+			isStartDateValid(input);
+
 			FinancingPlanBO requestRimac = this.mapperHelper.createRequestRimac(input, quotationDetails);
 
-			FinancingPlanBO responseRimac = this.pisdR020.executeSimulateInsuranceQuotationInstallmentPlan(requestRimac, input.getTraceId());
+			FinancingPlanBO responseRimac = this.pisdR020.executeFinancingPlan(requestRimac, input.getTraceId());
 			LOGGER.info("***** PISDR030Impl - validate SimulateInsuranceQuotationInstallmentPlan Service response *****");
 			try {
 				validateSimulateInsuranceQuotationInstallmentPlanResponse(responseRimac);
@@ -61,6 +69,17 @@ public class PISDR030Impl extends PISDR030Abstract {
 		return response;
 	}
 
+	private void isStartDateValid(FinancingPlanDTO input){
+		try {
+			String now = dateFormat.format(new Date());
+			if (Objects.isNull(input.getStartDate()) || input.getStartDate().before(dateFormat.parse(now))) {
+				this.addAdvice(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE.getAdviceCode());
+				throw PISDValidation.build(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE);
+			}
+		} catch (ParseException ex){
+			LOGGER.info("***** PISDR030Impl - isStartDateValid | Parsing error: {} *****", ex.getMessage());
+		}
+	}
 	private void validateSimulateInsuranceQuotationInstallmentPlanResponse(FinancingPlanBO responseRimac) {
 		if(Objects.isNull(responseRimac)) {
 			throw PISDValidation.build(PISDErrors.ERROR_CONNECTION_SCHEDULE_QUOTE_RIMAC_SERVICE);
