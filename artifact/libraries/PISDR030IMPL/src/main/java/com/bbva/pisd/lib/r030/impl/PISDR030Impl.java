@@ -24,7 +24,6 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class PISDR030Impl extends PISDR030Abstract {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDR030Impl.class);
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 	@Override
 	public FinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input) {
@@ -69,15 +68,11 @@ public class PISDR030Impl extends PISDR030Abstract {
 		return response;
 	}
 
-	private void isStartDateValid(FinancingPlanDTO input){
-		try {
-			String now = dateFormat.format(new Date());
-			if (Objects.isNull(input.getStartDate()) || input.getStartDate().before(dateFormat.parse(now))) {
-				this.addAdvice(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE.getAdviceCode());
-				throw PISDValidation.build(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE);
-			}
-		} catch (ParseException ex){
-			LOGGER.info("***** PISDR030Impl - isStartDateValid | Parsing error: {} *****", ex.getMessage());
+	private void isStartDateValid(FinancingPlanDTO input) {
+		Date now = this.mapperHelper.getNowDate();
+		if (Objects.isNull(input.getStartDate()) || input.getStartDate().before(now)) {
+			this.addAdvice(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE.getAdviceCode());
+			throw PISDValidation.build(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE);
 		}
 	}
 	private void validateSimulateInsuranceQuotationInstallmentPlanResponse(FinancingPlanBO responseRimac) {

@@ -87,6 +87,12 @@ public class MapperHelperTest {
     }
 
     @Test
+    public void getNowDate() throws IOException{
+        Date now = mapperHelper.getNowDate();
+        assertNotNull(now);
+    }
+
+    @Test
     public void createRequestRimac() throws IOException{
         FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
         QuotDetailDAO quotDetailDAO = new QuotDetailDAO();
@@ -94,6 +100,7 @@ public class MapperHelperTest {
         FinancingPlanBO requestRimac = mapperHelper.createRequestRimac(request,quotDetailDAO);
         assertNotNull(requestRimac.getPayload());
     }
+
 
     @Test
     public void mapSimulateInsuranceQuotationInstallmentPlanResponseValues() throws IOException {

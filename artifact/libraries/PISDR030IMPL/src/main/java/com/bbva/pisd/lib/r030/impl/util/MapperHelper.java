@@ -11,6 +11,7 @@ import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,6 +64,17 @@ public class MapperHelper {
         installmentsDTO.setPeriod(period);
         installmentsDTO.setPaymentAmount(amount);
         return installmentsDTO;
+    }
+
+    public Date getNowDate() {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String now = dateFormat.format(new Date());
+            return dateFormat.parse(now);
+        }
+        catch (ParseException ex){
+            return new Date();
+        }
     }
 
     public void setApplicationConfigurationService(ApplicationConfigurationService applicationConfigurationService) {
