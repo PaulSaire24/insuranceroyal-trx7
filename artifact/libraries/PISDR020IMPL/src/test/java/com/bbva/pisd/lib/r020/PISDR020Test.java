@@ -85,7 +85,7 @@ public class PISDR020Test {
 		when(externalApiConnector.postForObject(anyString(), anyObject(), any()))
 				.thenReturn(responseRimac);
 
-		FinancingPlanBO validation = pisdr020.executeSimulateInsuranceQuotationInstallmentPlan(new FinancingPlanBO(), TRACE_ID);
+		FinancingPlanBO validation = pisdr020.executeFinancingPlan(new FinancingPlanBO(), TRACE_ID);
 		assertNotNull(validation);
 		assertNotNull(validation.getPayload());
 		assertNotNull(validation.getPayload().getFechaInicio());
@@ -107,7 +107,7 @@ public class PISDR020Test {
 		when(externalApiConnector.postForObject(anyString(), anyObject(), any()))
 				.thenThrow(new RestClientException(MESSAGE_EXCEPTION));
 
-		FinancingPlanBO validation = pisdr020.executeSimulateInsuranceQuotationInstallmentPlan(new FinancingPlanBO(), TRACE_ID);
+		FinancingPlanBO validation = pisdr020.executeFinancingPlan(new FinancingPlanBO(), TRACE_ID);
 		assertNull(validation);
 	}
 
