@@ -3,7 +3,12 @@
 	<paramsIn>
 		<parameter order="1" name="quotationId" mandatory="1" type="String" size="20"/>
 		<parameter order="2" name="startDate" mandatory="0" type="Date (YYYY-MM-DD)" size="0"/>
-		<list order="3" name="installmentPlans" mandatory="1">
+		<list order="3" name="intallmentPlans" mandatory="1">
+			<dto order="1" name="Type" mandatory="0" package="com.bbva.pisd.dto.insurance.commons.InstallmentsDTO" artifactId="PISDC011">
+				<dto order="1" name="period" mandatory="1" package="com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO" artifactId="PISDC011">
+					<parameter order="1" name="id" mandatory="1" type="String" size="20"/>
+				</dto>
+			</dto>
 			<dto order="1" name="Type" mandatory="0" package="com.bbva.pisd.dto.insurance.commons.InstallmentsDTO" artifactId="PISDC011">
 				<dto order="1" name="period" mandatory="1" package="com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO" artifactId="PISDC011">
 					<parameter order="1" name="id" mandatory="1" type="String" size="20"/>

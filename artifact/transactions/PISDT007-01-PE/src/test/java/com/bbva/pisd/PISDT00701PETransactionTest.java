@@ -92,7 +92,7 @@ public class PISDT00701PETransactionTest {
 
 		doReturn("1a02cbcc-7298-4db8-895b-e5f6692bc89a").when(this.transaction).getQuotationid();
 		doReturn(new Date()).when(this.transaction).getStartdate();
-		doReturn(installmentsDTOS).when(this.transaction).getInstallmentplans();
+		doReturn(installmentsDTOS).when(this.transaction).getIntallmentplans();
 	}
 
 	@Test

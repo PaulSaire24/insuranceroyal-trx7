@@ -29,10 +29,10 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	}
 
 	/**
-	 * Return value for input parameter installmentPlans
+	 * Return value for input parameter intallmentPlans
 	 */
-	protected List<InstallmentsDTO> getInstallmentplans(){
-		return (List<InstallmentsDTO>)this.getParameter("installmentPlans");
+	protected List<InstallmentsDTO> getIntallmentplans(){
+		return (List<InstallmentsDTO>)this.getParameter("intallmentPlans");
 	}
 
 	/**
@@ -50,17 +50,16 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	}
 
 	/**
-	 * Set value for List<InstallmentsDTO> output parameter installmentsPlans
-	 */
-	protected void setInstallmentplans(final List<InstallmentsDTO> field){
-		this.addParameter("installmentPlans", field);
-	}
-
-	/**
 	 * Set value for Long output parameter totalNumberInstallments
 	 */
 	protected void setTotalnumberinstallments(final Long field){
 		this.addParameter("totalNumberInstallments", field);
 	}
 
+	/**
+	 * Set value for List<InstallmentsDTO> output parameter installmentPlans
+	 */
+	protected void setInstallmentplans(final List<InstallmentsDTO> field){
+		this.addParameter("installmentPlans", field);
+	}
 }

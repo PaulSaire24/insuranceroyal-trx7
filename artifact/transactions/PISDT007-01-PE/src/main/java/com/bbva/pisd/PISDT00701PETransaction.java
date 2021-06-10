@@ -32,7 +32,7 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 		FinancingPlanDTO input = new FinancingPlanDTO();
 		input.setQuotationId(this.getQuotationid());
 		input.setStartDate(this.getStartdate());
-		input.setInstallmentPlans(this.getInstallmentplans());
+		input.setInstallmentPlans(this.getIntallmentplans());
 		input.setCreationUser((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
 		input.setUserAudit((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
 		input.setSaleChannelId((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.CHANNELCODE));
