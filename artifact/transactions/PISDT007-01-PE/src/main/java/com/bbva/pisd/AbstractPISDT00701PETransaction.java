@@ -50,13 +50,6 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	}
 
 	/**
-	 * Set value for Long output parameter totalNumberInstallments
-	 */
-	protected void setTotalnumberinstallments(final Long field){
-		this.addParameter("totalNumberInstallments", field);
-	}
-
-	/**
 	 * Set value for List<InstallmentsDTO> output parameter installmentPlans
 	 */
 	protected void setInstallmentplans(final List<InstallmentsDTO> field){

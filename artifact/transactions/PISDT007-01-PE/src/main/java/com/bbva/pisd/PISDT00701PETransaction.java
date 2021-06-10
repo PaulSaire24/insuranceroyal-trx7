@@ -42,7 +42,6 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 
 		if(output != null) {
 			this.setStartdate(output.getStartDate());
-			this.setTotalnumberinstallments(output.getTotalNumberInstallments());
 			this.setMaturitydate(output.getMaturityDate());
 			this.setInstallmentplans(output.getInstallmentPlans());
 			this.setHttpResponseCode(HttpResponseCode.HTTP_CODE_200, Severity.OK);

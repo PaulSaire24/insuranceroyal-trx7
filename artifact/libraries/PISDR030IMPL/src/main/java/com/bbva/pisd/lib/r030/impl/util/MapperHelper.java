@@ -45,7 +45,6 @@ public class MapperHelper {
         response.setQuotationId(responseRimac.getPayload().getCotizacion());
         response.setStartDate(responseRimac.getPayload().getFechaInicio());
         response.setMaturityDate(responseRimac.getPayload().getFechaFin());
-        response.setTotalNumberInstallments(Long.valueOf(responseRimac.getPayload().getFinanciamiento().size()));
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().getFinanciamiento().stream().map(financiamiento -> createInstallment(financiamiento)).collect(Collectors.toList());
         response.setInstallmentPlans(installmentsDTOS);
     }
@@ -59,6 +58,7 @@ public class MapperHelper {
         String periodicidad = cuotaFinanciamientoBO.getDescripcionPeriodo();
         period.setId(this.applicationConfigurationService.getProperty(periodicidad));
         period.setName(periodicidad);
+        installmentsDTO.setTotalNumberInstallments(cuotaFinanciamientoBO.getNumeroCuotasTotales());
         installmentsDTO.setPeriod(period);
         installmentsDTO.setPaymentAmount(amount);
         return installmentsDTO;

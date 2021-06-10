@@ -7,6 +7,7 @@ import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.dto.insurance.utils.PISDValidation;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 	@Override
 	public FinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input) {
 		LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan START *****");
-		LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan Param: {} *****", input.getQuotationId());
+		LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan Param: {} *****", input);
 
 		FinancingPlanDTO response = new FinancingPlanDTO();
 
@@ -53,8 +54,9 @@ public class PISDR030Impl extends PISDR030Abstract {
 				return null;
 			}
 
+			Gson g = new Gson();
 			this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(response, responseRimac);
-			LOGGER.info("***** PISDR030Impl - mapSimulateInsuranceQuotationInstallmentPlanResponseValues Response with Rimac values: {} *****", response);
+			LOGGER.info("***** PISDR030Impl - mapSimulateInsuranceQuotationInstallmentPlanResponseValues Response with Rimac values: {} *****", g.toJson(response));
 
 		}
 

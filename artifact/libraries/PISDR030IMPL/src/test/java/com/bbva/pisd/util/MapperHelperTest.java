@@ -104,7 +104,6 @@ public class MapperHelperTest {
         assertNotNull(financingPlanDTO.getQuotationId());
         assertNotNull(financingPlanDTO.getStartDate());
         assertNotNull(financingPlanDTO.getInstallmentPlans());
-        assertNotNull(financingPlanDTO.getTotalNumberInstallments());
         assertNotNull(financingPlanDTO.getMaturityDate());
     }
 }
