@@ -2,7 +2,7 @@ package com.bbva.pisd;
 
 import com.bbva.elara.transaction.AbstractTransaction;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
-import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
+import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import java.util.Date;
 import java.util.List;
 
@@ -37,9 +37,9 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	}
 
 	/**
-	 * Set value for EntityOutFinancingPlanDTO output parameter data
+	 * Set value for FinancingPlanDTO output parameter data
 	 */
-	protected void setData(final EntityOutFinancingPlanDTO field){
+	protected void setData(final FinancingPlanDTO field){
 		this.addParameter("data", field);
 	}
 }

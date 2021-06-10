@@ -42,7 +42,7 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 		EntityOutFinancingPlanDTO output = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 
 		if(output != null) {
-			this.setData(output);
+			this.setData(output.getData());
 			this.setHttpResponseCode(HttpResponseCode.HTTP_CODE_200, Severity.OK);
 		} else {
 			this.setSeverity(Severity.ENR);

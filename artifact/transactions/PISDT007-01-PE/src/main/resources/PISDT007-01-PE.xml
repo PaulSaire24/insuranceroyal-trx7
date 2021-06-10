@@ -17,7 +17,7 @@
 		</list>
 	</paramsIn>
 	<paramsOut>
-		<dto order="1" name="data" mandatory="0" package="com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO" artifactId="PISDC011">
+		<dto order="1" name="data" mandatory="0" package="com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO" artifactId="PISDC011">
 			<parameter order="1" name="startDate" mandatory="0" type="Date (YYYY-MM-DD)" size="0"/>
 			<parameter order="2" name="maturityDate" mandatory="0" type="Date (YYYY-MM-DD)" size="0"/>
 			<list order="3" name="installmentPlans" mandatory="1">
