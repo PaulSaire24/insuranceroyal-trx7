@@ -3,6 +3,7 @@ package com.bbva.pisd.lib.r030.impl;
 import com.bbva.apx.exception.business.BusinessException;
 import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
+import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
@@ -25,11 +26,11 @@ public class PISDR030Impl extends PISDR030Abstract {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDR030Impl.class);
 
 	@Override
-	public FinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input) {
+	public EntityOutFinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input) {
 		LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan START *****");
 		LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan Param: {} *****", input);
 
-		FinancingPlanDTO response = new FinancingPlanDTO();
+		EntityOutFinancingPlanDTO response = new EntityOutFinancingPlanDTO();
 
 		try {
 
@@ -54,9 +55,8 @@ public class PISDR030Impl extends PISDR030Abstract {
 				return null;
 			}
 
-			Gson g = new Gson();
 			this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(response, responseRimac);
-			LOGGER.info("***** PISDR030Impl - mapSimulateInsuranceQuotationInstallmentPlanResponseValues Response with Rimac values: {} *****", g.toJson(response));
+			LOGGER.info("***** PISDR030Impl - mapSimulateInsuranceQuotationInstallmentPlanResponseValues Response with Rimac values: {} *****", response);
 
 		}
 

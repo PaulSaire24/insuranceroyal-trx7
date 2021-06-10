@@ -2,6 +2,7 @@ package com.bbva.pisd;
 
 import com.bbva.elara.domain.transaction.Severity;
 import com.bbva.elara.domain.transaction.response.HttpResponseCode;
+import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.lib.r030.PISDR030;
 import com.bbva.elara.domain.transaction.RequestHeaderParamsName;
@@ -38,12 +39,10 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 		input.setSaleChannelId((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.CHANNELCODE));
 		input.setTraceId((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.REQUESTID));
 
-		FinancingPlanDTO output = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+		EntityOutFinancingPlanDTO output = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 
 		if(output != null) {
-			this.setStartdate(output.getStartDate());
-			this.setMaturitydate(output.getMaturityDate());
-			this.setInstallmentplans(output.getInstallmentPlans());
+			this.setData(output);
 			this.setHttpResponseCode(HttpResponseCode.HTTP_CODE_200, Severity.OK);
 		} else {
 			this.setSeverity(Severity.ENR);

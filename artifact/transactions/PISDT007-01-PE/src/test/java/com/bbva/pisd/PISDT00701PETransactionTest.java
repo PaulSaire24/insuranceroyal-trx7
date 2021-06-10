@@ -15,6 +15,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
+import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
 import com.bbva.pisd.dto.insurance.simulation.InsuranceSimulationDTO;
@@ -105,8 +106,9 @@ public class PISDT00701PETransactionTest {
 
 	@Test
 	public void execute() throws IOException {
-		FinancingPlanDTO output = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponse();
-
+		EntityOutFinancingPlanDTO output = new EntityOutFinancingPlanDTO();
+		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponse();
+		output.setData(financingPlanDTO);
 		when(pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(anyObject())).thenReturn(output);
 		this.transaction.execute();
 

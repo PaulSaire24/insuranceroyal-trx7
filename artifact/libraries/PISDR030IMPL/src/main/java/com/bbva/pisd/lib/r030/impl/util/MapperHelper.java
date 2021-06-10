@@ -8,6 +8,7 @@ import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
+import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
 
@@ -41,12 +42,14 @@ public class MapperHelper {
         return cuotaFinanciamientoBO;
     }
 
-    public void mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanDTO response, FinancingPlanBO responseRimac) {
-        response.setQuotationId(responseRimac.getPayload().getCotizacion());
-        response.setStartDate(responseRimac.getPayload().getFechaInicio());
-        response.setMaturityDate(responseRimac.getPayload().getFechaFin());
+    public void mapSimulateInsuranceQuotationInstallmentPlanResponseValues(EntityOutFinancingPlanDTO response, FinancingPlanBO responseRimac) {
+        FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+        financingPlanDTO.setStartDate(responseRimac.getPayload().getFechaInicio());
+        financingPlanDTO.setMaturityDate(responseRimac.getPayload().getFechaFin());
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().getFinanciamiento().stream().map(financiamiento -> createInstallment(financiamiento)).collect(Collectors.toList());
-        response.setInstallmentPlans(installmentsDTOS);
+        financingPlanDTO.setInstallmentPlans(installmentsDTOS);
+        response.setData(financingPlanDTO);
+
     }
 
     private InstallmentsDTO createInstallment (CuotaFinanciamientoBO cuotaFinanciamientoBO) {

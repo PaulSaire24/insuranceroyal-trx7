@@ -10,6 +10,7 @@ import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.bo.simulation.InsuranceSimulationBO;
 import com.bbva.pisd.dto.insurance.commons.*;
 import com.bbva.pisd.dto.insurance.dao.*;
+import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
 import com.bbva.pisd.dto.insurance.simulation.InsuranceSimulationDTO;
@@ -98,12 +99,9 @@ public class MapperHelperTest {
 
     @Test
     public void mapSimulateInsuranceQuotationInstallmentPlanResponseValues() throws IOException {
-        FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+        EntityOutFinancingPlanDTO output = new EntityOutFinancingPlanDTO();
         FinancingPlanBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
-        mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(financingPlanDTO,responseRimac);
-        assertNotNull(financingPlanDTO.getQuotationId());
-        assertNotNull(financingPlanDTO.getStartDate());
-        assertNotNull(financingPlanDTO.getInstallmentPlans());
-        assertNotNull(financingPlanDTO.getMaturityDate());
+        mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(output,responseRimac);
+        assertNotNull(output.getData());
     }
 }
