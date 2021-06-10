@@ -5,8 +5,6 @@ import com.bbva.elara.domain.transaction.response.HttpResponseCode;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.lib.r030.PISDR030;
 import com.bbva.elara.domain.transaction.RequestHeaderParamsName;
-import com.bbva.pisd.dto.insurance.detail.InputQuotationDetailDTO;
-import com.bbva.pisd.dto.insurance.simulation.InsuranceSimulationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

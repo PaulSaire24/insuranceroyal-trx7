@@ -80,7 +80,7 @@ public class PISDR020Test {
 	public void executeSimulateInsuranceQuotationInstallmentPlanServiceOK() throws IOException {
 		LOGGER.info("PISDR020Test - Executing executeSimulateInsuranceQuotationInstallmentPlanServiceOK...");
 
-		FinancingPlanBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponse();
+		FinancingPlanBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
 
 		when(externalApiConnector.postForObject(anyString(), anyObject(), any()))
 				.thenReturn(responseRimac);
