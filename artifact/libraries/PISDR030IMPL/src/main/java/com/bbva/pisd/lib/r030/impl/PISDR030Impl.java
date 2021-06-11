@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
@@ -71,9 +72,8 @@ public class PISDR030Impl extends PISDR030Abstract {
 	private void isStartDateValid(FinancingPlanDTO input) {
 		LocalDate date = LocalDate.now();
 		java.sql.Date now = java.sql.Date.valueOf(date);
-		if (Objects.isNull(input.getStartDate()) || input.getStartDate().before(now)) {
-			this.addAdvice(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE.getAdviceCode());
-			throw PISDValidation.build(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE);
+		if (Objects.isNull(input.getStartDate())) {
+			input.setStartDate(now);
 		}
 	}
 	private void validateSimulateInsuranceQuotationInstallmentPlanResponse(FinancingPlanBO responseRimac) {
