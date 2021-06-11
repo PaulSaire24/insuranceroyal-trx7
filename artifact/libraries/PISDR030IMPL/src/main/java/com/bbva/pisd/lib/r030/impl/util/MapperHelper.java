@@ -47,7 +47,7 @@ public class MapperHelper {
         financingPlanDTO.setStartDate(responseRimac.getPayload().getFechaInicio());
         financingPlanDTO.setMaturityDate(responseRimac.getPayload().getFechaFin());
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().getFinanciamiento().stream().map(financiamiento -> createInstallment(financiamiento)).collect(Collectors.toList());
-        financingPlanDTO.setInstallmentPlans(installmentsDTOS);
+        financingPlanDTO.setInstallmentsPlans(installmentsDTOS);
         response.setData(financingPlanDTO);
 
     }
