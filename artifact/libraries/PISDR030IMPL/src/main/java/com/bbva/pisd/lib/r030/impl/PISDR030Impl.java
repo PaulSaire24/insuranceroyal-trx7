@@ -72,7 +72,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 	private void isStartDateValid(FinancingPlanDTO input) {
 		LocalDate date = LocalDate.now();
 		java.sql.Date now = java.sql.Date.valueOf(date);
-		if (Objects.isNull(input.getStartDate())) {
+		if (Objects.isNull(input.getStartDate()) || input.getStartDate().equals("")) {
 			input.setStartDate(now);
 		}
 	}
