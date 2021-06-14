@@ -84,7 +84,7 @@ public class PISDR030Test {
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(null);
 
-		EntityOutFinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 
 		assertNull(validation);
 	}
@@ -97,7 +97,7 @@ public class PISDR030Test {
 
 		when(pisdr020.executeFinancingPlan(anyObject(), anyString())).thenReturn(null);
 
-		EntityOutFinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 
 		assertNull(validation);
 	}

@@ -27,11 +27,11 @@ public class PISDR030Impl extends PISDR030Abstract {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDR030Impl.class);
 
 	@Override
-	public EntityOutFinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input) {
+	public FinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input) {
 		LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan START *****");
 		LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan Param: {} *****", input);
 
-		EntityOutFinancingPlanDTO response = new EntityOutFinancingPlanDTO();
+		FinancingPlanDTO response = new FinancingPlanDTO();
 
 		try {
 
@@ -72,7 +72,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 	private void isStartDateValid(FinancingPlanDTO input) {
 		LocalDate date = LocalDate.now();
 		java.sql.Date now = java.sql.Date.valueOf(date);
-		if (Objects.isNull(input.getStartDate()) || input.getStartDate().equals("")) {
+		if (Objects.isNull(input.getStartDate())) {
 			input.setStartDate(now);
 		}
 	}

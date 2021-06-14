@@ -42,14 +42,11 @@ public class MapperHelper {
         return cuotaFinanciamientoBO;
     }
 
-    public void mapSimulateInsuranceQuotationInstallmentPlanResponseValues(EntityOutFinancingPlanDTO response, FinancingPlanBO responseRimac) {
-        FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
-        financingPlanDTO.setStartDate(responseRimac.getPayload().getFechaInicio());
-        financingPlanDTO.setMaturityDate(responseRimac.getPayload().getFechaFin());
+    public void mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanDTO response, FinancingPlanBO responseRimac) {
+        response.setStartDate(responseRimac.getPayload().getFechaInicio());
+        response.setMaturityDate(responseRimac.getPayload().getFechaFin());
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().getFinanciamiento().stream().map(financiamiento -> createInstallment(financiamiento)).collect(Collectors.toList());
-        financingPlanDTO.setInstallmentsPlans(installmentsDTOS);
-        response.setData(financingPlanDTO);
-
+        response.setInstallmentPlans(installmentsDTOS);
     }
 
     private InstallmentsDTO createInstallment (CuotaFinanciamientoBO cuotaFinanciamientoBO) {

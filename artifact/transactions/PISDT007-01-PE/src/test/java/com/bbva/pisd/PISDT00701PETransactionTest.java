@@ -93,7 +93,7 @@ public class PISDT00701PETransactionTest {
 
 		doReturn("1a02cbcc-7298-4db8-895b-e5f6692bc89a").when(this.transaction).getQuotationid();
 		doReturn(new Date()).when(this.transaction).getStartdate();
-		doReturn(installmentsDTOS).when(this.transaction).getIntallmentplans();
+		doReturn(installmentsDTOS).when(this.transaction).getInstallmentplans();
 	}
 
 	@Test
@@ -106,9 +106,7 @@ public class PISDT00701PETransactionTest {
 
 	@Test
 	public void execute() throws IOException {
-		EntityOutFinancingPlanDTO output = new EntityOutFinancingPlanDTO();
-		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponse();
-		output.setData(financingPlanDTO);
+		FinancingPlanDTO output = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponse();
 		when(pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(anyObject())).thenReturn(output);
 		this.transaction.execute();
 

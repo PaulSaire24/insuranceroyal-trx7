@@ -99,9 +99,11 @@ public class MapperHelperTest {
 
     @Test
     public void mapSimulateInsuranceQuotationInstallmentPlanResponseValues() throws IOException {
-        EntityOutFinancingPlanDTO output = new EntityOutFinancingPlanDTO();
+        FinancingPlanDTO output = new FinancingPlanDTO();
         FinancingPlanBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
         mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(output,responseRimac);
-        assertNotNull(output.getData());
+        assertNotNull(output.getMaturityDate());
+        assertNotNull(output.getMaturityDate());
+        assertNotNull(output.getInstallmentPlans());
     }
 }

@@ -8,6 +8,6 @@ import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
  */
 public interface PISDR030 {
 
-	EntityOutFinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input);
+	FinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input);
 
 }

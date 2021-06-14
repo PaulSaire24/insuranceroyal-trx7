@@ -33,16 +33,18 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 		FinancingPlanDTO input = new FinancingPlanDTO();
 		input.setQuotationId(this.getQuotationid());
 		input.setStartDate(this.getStartdate());
-		input.setInstallmentPlans(this.getIntallmentplans());
+		input.setInstallmentPlans(this.getInstallmentplans());
 		input.setCreationUser((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
 		input.setUserAudit((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
 		input.setSaleChannelId((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.CHANNELCODE));
 		input.setTraceId((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.REQUESTID));
 
-		EntityOutFinancingPlanDTO output = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+		FinancingPlanDTO output = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 
 		if(output != null) {
-			this.setData(output.getData());
+			this.setStartdate(output.getStartDate());
+			this.setMaturitydate(output.getMaturityDate());
+			this.setInstallmentplans(output.getInstallmentPlans());
 			this.setHttpResponseCode(HttpResponseCode.HTTP_CODE_200, Severity.OK);
 		} else {
 			this.setSeverity(Severity.ENR);
