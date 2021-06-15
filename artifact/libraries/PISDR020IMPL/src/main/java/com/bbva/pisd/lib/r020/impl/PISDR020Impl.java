@@ -1,6 +1,8 @@
 package com.bbva.pisd.lib.r020.impl;
 
 import com.bbva.pisd.dto.insurance.amazon.SignatureAWS;
+import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
@@ -14,6 +16,8 @@ import org.springframework.web.client.RestClientException;
 
 import javax.ws.rs.HttpMethod;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The  interface PISDR020Impl class...
@@ -23,12 +27,12 @@ public class PISDR020Impl extends PISDR020Abstract {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDR020Impl.class);
 	private static final String AUTHORIZATION = "Authorization";
 	private static final String JSON_LOG = "JSON BODY TO SEND: {}";
-
+	private static final String ID_COTIZACION = "cotizacion-id";
 
 	@Override
-	public FinancingPlanBO executeFinancingPlan (FinancingPlanBO input, String traceId) {
-		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan START *****");
-		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan Param: {} *****", input);
+	public FinancingPlanBO executeQuoteSchedule (FinancingPlanBO input, String traceId) {
+		LOGGER.info("***** PISDR020Impl - executeFinancingPlan START *****");
+		LOGGER.info("***** PISDR020Impl - executeFinancingPlan Param: {} *****", input);
 
 		FinancingPlanBO output = null;
 
@@ -43,12 +47,43 @@ public class PISDR020Impl extends PISDR020Abstract {
 		try {
 			output = this.externalApiConnector.postForObject(PISDProperties.ID_API_FINANCING_PLAN_RIMAC.getValue(), entity, FinancingPlanBO.class);
 		} catch(RestClientException e) {
-			LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan ***** Exception: {}", e.getMessage());
+			LOGGER.info("***** PISDR020Impl - executeFinancingPlan ***** Exception: {}", e.getMessage());
 			this.addAdvice(PISDErrors.ERROR_CONNECTION_SCHEDULE_QUOTE_RIMAC_SERVICE.getAdviceCode());
 		}
 
-		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan ***** Response: {}", getRequestJson(output));
-		LOGGER.info("***** PISDR020Impl - executeSimulateInsuranceQuotationInstallmentPlan END *****");
+		LOGGER.info("***** PISDR020Impl - executeFinancingPlan ***** Response: {}", getRequestJson(output));
+		LOGGER.info("***** PISDR020Impl - executeFinancingPlan END *****");
+
+		return output;
+	}
+
+	@Override
+	public CronogramaPagoBO executePaymentSchedule(FinancingPlanBO input, QuotDetailDAO quotationDetails, String traceId) {
+		LOGGER.info("***** PISDR020Impl - executePaymentSchedule START *****");
+		LOGGER.info("***** PISDR020Impl - executePaymentSchedule Param: {} *****", input);
+
+		CronogramaPagoBO output = null;
+
+		String requestJson = getRequestJson(input);
+
+		SignatureAWS signatureAWS = this.pisdR014.executeSignatureConstruction(requestJson, HttpMethod.POST,
+				PISDProperties.URI_PAYMENT_SCHEDULE.getValue().replaceAll(ID_COTIZACION, quotationDetails.getRimacId()),null, traceId);
+
+		HttpEntity<String> entity = new HttpEntity<>(requestJson, createHttpHeadersAWS(signatureAWS));
+		LOGGER.info(JSON_LOG, entity.getBody());
+
+		Map<String, Object> pathParams = new HashMap<>();
+		pathParams.put("idCotizacion", quotationDetails.getRimacId());
+
+		try {
+			output = this.externalApiConnector.postForObject(PISDProperties.ID_API_PAYMENT_SCHEDULE_RIMAC.getValue(), entity, CronogramaPagoBO.class, pathParams);
+		} catch(RestClientException e) {
+			LOGGER.info("***** PISDR020Impl - executePaymentSchedule ***** Exception: {}", e.getMessage());
+			this.addAdvice(PISDErrors.ERROR_CONNECTION_PAYMENT_SCHEDULE_RIMAC_SERVICE.getAdviceCode());
+		}
+
+		LOGGER.info("***** PISDR020Impl - executePaymentSchedule ***** Response: {}", getRequestJson(output));
+		LOGGER.info("***** PISDR020Impl - executePaymentSchedule END *****");
 
 		return output;
 	}

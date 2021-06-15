@@ -1,5 +1,7 @@
 package com.bbva.pisd.lib.r020;
 
+import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 
 /**
@@ -7,7 +9,7 @@ import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
  */
 public interface PISDR020 {
 
-	FinancingPlanBO executeFinancingPlan (FinancingPlanBO request, String traceId);
-
+	FinancingPlanBO executeQuoteSchedule (FinancingPlanBO request, String traceId);
+	CronogramaPagoBO executePaymentSchedule (FinancingPlanBO request, QuotDetailDAO quotationDetails, String traceId);
 
 }
