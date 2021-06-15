@@ -90,12 +90,25 @@ public class PISDR030Test {
 	}
 
 	@Test
-	public void executeSimulateInsuranceQuotationInstallmentPlanWithoutResponseFromRimac() {
-		LOGGER.info("PISDR030Test Executing executeSimulateInsuranceQuotationInstallmentPlanWithoutResponseFromRimac ...");
+	public void executeQuoteSchedule() {
+		LOGGER.info("PISDR030Test Executing executeQuoteSchedule ...");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 
-		when(pisdr020.executeFinancingPlan(anyObject(), anyString())).thenReturn(null);
+		when(pisdr020.executeQuoteSchedule(anyObject(), anyString())).thenReturn(null);
+
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+
+		assertNull(validation);
+	}
+
+	@Test
+	public void executePaymentSchedule() {
+		LOGGER.info("PISDR030Test Executing executePaymentSchedule ...");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
 
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 

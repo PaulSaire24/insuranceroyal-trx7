@@ -72,7 +72,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 
 		LOGGER.info("***** PISDR030Impl - executePaymentSchedule *****");
 		FinancingPlanBO requestRimac = this.mapperHelper.createRequestPaymentScheduleRimac(input);
-		CronogramaPagoBO responseRimac = this.pisdR020.executePaymentSchedule(requestRimac, quotationDetails, input.getTraceId());
+		CronogramaPagoBO responseRimac = this.pisdR020.executePaymentSchedule(requestRimac, quotationDetails.getRimacId(), input.getTraceId());
 		LOGGER.info("***** PISDR030Impl - validate SimulateInsuranceQuotationInstallmentPlan Service response *****");
 		try {
 			validateSimulateInsuranceQuotationInstallmentPlanResponse(responseRimac);

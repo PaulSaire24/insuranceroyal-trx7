@@ -81,7 +81,7 @@ public class MapperHelper {
         PaymentAmountDTO amount = new PaymentAmountDTO();
         amount.setAmount(0.0);
         amount.setCurrency("USD");
-        period.setId(request.getPeriod().getId());
+        period.setId(request.getInstallmentPlans().get(0).getPeriod().getId());
         installmentsDTO.setPeriod(period);
         installmentsDTO.setPaymentAmount(amount);
         return installmentsDTO;

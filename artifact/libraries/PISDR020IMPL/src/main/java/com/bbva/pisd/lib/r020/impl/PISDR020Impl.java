@@ -58,22 +58,22 @@ public class PISDR020Impl extends PISDR020Abstract {
 	}
 
 	@Override
-	public CronogramaPagoBO executePaymentSchedule(FinancingPlanBO input, QuotDetailDAO quotationDetails, String traceId) {
+	public CronogramaPagoBO executePaymentSchedule(FinancingPlanBO input, String quotationId, String traceId) {
 		LOGGER.info("***** PISDR020Impl - executePaymentSchedule START *****");
 		LOGGER.info("***** PISDR020Impl - executePaymentSchedule Param: {} *****", input);
 
 		CronogramaPagoBO output = null;
-
+		String uri = PISDProperties.URI_PAYMENT_SCHEDULE.getValue().replace(ID_COTIZACION, quotationId);
 		String requestJson = getRequestJson(input);
 
 		SignatureAWS signatureAWS = this.pisdR014.executeSignatureConstruction(requestJson, HttpMethod.POST,
-				PISDProperties.URI_PAYMENT_SCHEDULE.getValue().replaceAll(ID_COTIZACION, quotationDetails.getRimacId()),null, traceId);
+				uri,null, traceId);
 
 		HttpEntity<String> entity = new HttpEntity<>(requestJson, createHttpHeadersAWS(signatureAWS));
 		LOGGER.info(JSON_LOG, entity.getBody());
 
 		Map<String, Object> pathParams = new HashMap<>();
-		pathParams.put("idCotizacion", quotationDetails.getRimacId());
+		pathParams.put("idCotizacion", quotationId);
 
 		try {
 			output = this.externalApiConnector.postForObject(PISDProperties.ID_API_PAYMENT_SCHEDULE_RIMAC.getValue(), entity, CronogramaPagoBO.class, pathParams);

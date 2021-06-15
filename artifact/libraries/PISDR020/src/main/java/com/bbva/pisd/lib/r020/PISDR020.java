@@ -10,6 +10,6 @@ import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 public interface PISDR020 {
 
 	FinancingPlanBO executeQuoteSchedule (FinancingPlanBO request, String traceId);
-	CronogramaPagoBO executePaymentSchedule (FinancingPlanBO request, QuotDetailDAO quotationDetails, String traceId);
+	CronogramaPagoBO executePaymentSchedule (FinancingPlanBO request, String quotationId, String traceId);
 
 }

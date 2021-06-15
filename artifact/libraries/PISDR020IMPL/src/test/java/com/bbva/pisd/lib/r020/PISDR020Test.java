@@ -5,9 +5,12 @@ import com.bbva.elara.domain.transaction.Context;
 import com.bbva.elara.domain.transaction.ThreadContext;
 import com.bbva.elara.utility.api.connector.APIConnector;
 import com.bbva.pisd.dto.insurance.amazon.SignatureAWS;
+import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
 import com.bbva.pisd.dto.insurance.bo.detail.InsuranceQuotationDetailBO;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
+import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.lib.r014.PISDR014;
 import com.bbva.pisd.lib.r020.factory.ApiConnectorFactoryTest;
 import com.bbva.pisd.lib.r020.impl.PISDR020Impl;
@@ -16,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
@@ -34,8 +38,7 @@ import java.io.IOException;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -54,13 +57,14 @@ public class PISDR020Test {
 
 	private PISDR014 pisdr014;
 
+	private PISDProperties pisdProperties;
+
 	private MockDTO mockDTO;
 	private APIConnector externalApiConnector;
 
 	@Before
 	public void setUp() {
 		ThreadContext.set(new Context());
-
 		MockBundleContext mockBundleContext = mock(MockBundleContext.class);
 
 		ApiConnectorFactoryTest apiConnectorFactoryMock = new ApiConnectorFactoryTest();
@@ -77,15 +81,15 @@ public class PISDR020Test {
 	}
 
 	@Test
-	public void executeSimulateInsuranceQuotationInstallmentPlanServiceOK() throws IOException {
-		LOGGER.info("PISDR020Test - Executing executeSimulateInsuranceQuotationInstallmentPlanServiceOK...");
+	public void executeQuoteScheduleServiceOK() throws IOException {
+		LOGGER.info("PISDR020Test - Executing executeQuoteScheduleServiceOK...");
 
 		FinancingPlanBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
 
 		when(externalApiConnector.postForObject(anyString(), anyObject(), any()))
 				.thenReturn(responseRimac);
 
-		FinancingPlanBO validation = pisdr020.executeFinancingPlan(new FinancingPlanBO(), TRACE_ID);
+		FinancingPlanBO validation = pisdr020.executeQuoteSchedule(new FinancingPlanBO(), TRACE_ID);
 		assertNotNull(validation);
 		assertNotNull(validation.getPayload());
 		assertNotNull(validation.getPayload().getFechaInicio());
@@ -101,13 +105,45 @@ public class PISDR020Test {
 	}
 
 	@Test
-	public void executeSimulateInsuranceQuotationInstallmentPlanWithRestClientException() {
-		LOGGER.info("PISDR020Test - Executing executeSimulateInsuranceQuotationInstallmentPlanServiceOK...");
+	public void executePaymentScheduleServiceOK() throws IOException {
+		LOGGER.info("PISDR020Test - Executing executePaymentScheduleServiceOK...");
+
+		CronogramaPagoBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanCronogramaPagoResponseRimac();
+
+		when(externalApiConnector.postForObject(anyString(), anyObject(), any(), anyMap()))
+				.thenReturn(responseRimac);
+
+		CronogramaPagoBO validation = pisdr020.executePaymentSchedule(new FinancingPlanBO(), "123123", TRACE_ID);
+		assertNotNull(validation);
+		assertNotNull(validation.getPayload());
+		assertNotNull(validation.getPayload().get(0).getFechaInicio());
+		assertNotNull(validation.getPayload().get(0).getFechaFinal());
+		assertNotNull(validation.getPayload().get(0).getNumeroCuotas());
+		assertNotNull(validation.getPayload().get(0).getCuotasFinanciamiento().get(0).getCuota());
+		assertNotNull(validation.getPayload().get(0).getCuotasFinanciamiento().get(0).getMonto());
+		assertNotNull(validation.getPayload().get(0).getCuotasFinanciamiento().get(0).getFechaVencimiento());
+	}
+
+	@Test
+	public void executeQuoteScheduleWithRestClientException() {
+		LOGGER.info("PISDR020Test - Executing executeQuoteScheduleWithRestClientException...");
 
 		when(externalApiConnector.postForObject(anyString(), anyObject(), any()))
 				.thenThrow(new RestClientException(MESSAGE_EXCEPTION));
 
-		FinancingPlanBO validation = pisdr020.executeFinancingPlan(new FinancingPlanBO(), TRACE_ID);
+		FinancingPlanBO validation = pisdr020.executeQuoteSchedule(new FinancingPlanBO(), TRACE_ID);
+		assertNull(validation);
+	}
+
+
+	@Test
+	public void executePaymentScheduleWithRestClientException() {
+		LOGGER.info("PISDR020Test - Executing executePaymentScheduleWithRestClientException...");
+
+		when(externalApiConnector.postForObject(anyString(), anyObject(), any()))
+				.thenThrow(new RestClientException(MESSAGE_EXCEPTION));
+
+		CronogramaPagoBO validation = pisdr020.executePaymentSchedule(new FinancingPlanBO(), "123123", TRACE_ID);
 		assertNull(validation);
 	}
 
