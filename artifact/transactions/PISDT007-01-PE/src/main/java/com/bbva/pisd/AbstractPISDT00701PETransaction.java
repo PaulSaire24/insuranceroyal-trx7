@@ -2,6 +2,8 @@ package com.bbva.pisd;
 
 import com.bbva.elara.transaction.AbstractTransaction;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	/**
 	 * Return value for input parameter startDate
 	 */
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="EST")
 	protected Date getStartdate(){
 		return (Date)this.getParameter("startDate");
 	}
