@@ -28,6 +28,9 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 
 		LOGGER.info("Cabecera traceId: {}", this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.REQUESTID));
 
+		LOGGER.info("Cabecera setStartDate: {}", this.getStartdate());
+
+
 		PISDR030 pisdr030 = this.getServiceLibrary(PISDR030.class);
 
 		FinancingPlanDTO input = new FinancingPlanDTO();

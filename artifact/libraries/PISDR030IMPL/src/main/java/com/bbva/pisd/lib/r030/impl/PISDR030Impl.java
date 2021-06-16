@@ -83,14 +83,14 @@ public class PISDR030Impl extends PISDR030Abstract {
 		return this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(input, responseRimac);
 	}
 
-	private FinancingPlanDTO isStartDateValid(FinancingPlanDTO input, QuotDetailDAO quotationDetails) {
+	public FinancingPlanDTO isStartDateValid(FinancingPlanDTO input, QuotDetailDAO quotationDetails) {
 		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
 		LocalDate date = LocalDate.now();
 		java.sql.Date now = java.sql.Date.valueOf(date);
 		if (Objects.isNull(input.getStartDate())) {
 			input.setStartDate(now);
 			financingPlanDTO = executeQuoteSchedule(input,quotationDetails);
-		} else if(Objects.nonNull(input.getStartDate()) && input.getStartDate().after(now)) {
+		} else if(Objects.nonNull(input.getStartDate()) && now.before(input.getStartDate())) {
 			financingPlanDTO = executePaymentSchedule(input,quotationDetails);
 		} else {
 			financingPlanDTO = null;
