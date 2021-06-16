@@ -26,7 +26,7 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	/**
 	 * Return value for input parameter startDate
 	 */
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="PET")
 	protected Date getStartdate(){
 		return (Date)this.getParameter("startDate");
 	}
