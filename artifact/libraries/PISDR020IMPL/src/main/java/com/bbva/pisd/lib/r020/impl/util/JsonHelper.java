@@ -1,6 +1,11 @@
 package com.bbva.pisd.lib.r020.impl.util;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
 import org.joda.time.LocalDate;
 
 import java.lang.reflect.Type;

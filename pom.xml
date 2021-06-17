@@ -18,7 +18,7 @@
 		<outputDirectoryLibraries>../../../target/libraries</outputDirectoryLibraries>
 		<outputDirectoryTransactions>../../../target/transactions</outputDirectoryTransactions>
 		<jacoco.no.coverage>0.00</jacoco.no.coverage>
-		<jacoco.min.coverage>0.00</jacoco.min.coverage>
+		<jacoco.min.coverage>0.80</jacoco.min.coverage>
 		<jacoco.type.coverage>COMPLEXITY</jacoco.type.coverage>
 	</properties>
 	<modules>
