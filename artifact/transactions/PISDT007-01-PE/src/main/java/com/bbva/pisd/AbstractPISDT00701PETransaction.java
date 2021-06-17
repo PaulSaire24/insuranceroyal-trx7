@@ -27,7 +27,7 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	 */
 	protected LocalDate getStartdate(){
 		DateTimeZone dateTimeZone = DateTimeZone.forID("GMT");
-		return new LocalDate(this.getParameter("startDate"), dateTimeZone);
+		return this.getParameter("startDate") == null ? null : new LocalDate(this.getParameter("startDate"), dateTimeZone);
 	}
 
 	/**

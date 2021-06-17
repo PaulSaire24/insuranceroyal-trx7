@@ -71,8 +71,6 @@ public class MapperHelper {
 
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanDTO request, CronogramaPagoBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();
-        response.setStartDate(new LocalDate(responseRimac.getPayload().get(0).getFechaInicio()));
-        response.setMaturityDate(new LocalDate(responseRimac.getPayload().get(0).getFechaFinal()));
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().stream().map(cronogramaPago -> createInstallment(cronogramaPago, request)).collect(Collectors.toList());
         response.setInstallmentPlans(installmentsDTOS);
         return response;
