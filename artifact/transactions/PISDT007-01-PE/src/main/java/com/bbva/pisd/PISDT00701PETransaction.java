@@ -47,8 +47,8 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 		FinancingPlanDTO output = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 
 		if(output != null) {
-			this.setStartdate(output.getStartDate().toDate());
-			this.setMaturitydate(output.getMaturityDate().toDate());
+			this.setStartdate(output.getStartDate().toDateTimeAtCurrentTime().toDate());
+			this.setMaturitydate(output.getMaturityDate().toDateTimeAtCurrentTime().toDate());
 			this.setInstallmentplans(output.getInstallmentPlans());
 			this.setHttpResponseCode(HttpResponseCode.HTTP_CODE_200, Severity.OK);
 		} else {
