@@ -20,7 +20,7 @@ public class MapperHelper {
 
     private final String RIMAC = "RIMAC";
     private final String CUOTA = "CUOTA";
-    private static final DateTimeZone dateTimeZone = DateTimeZone.forID("GMT");
+    private final String DATE_TIME_ZONE = "DATE_TIME_ZONE";
 
     protected ApplicationConfigurationService applicationConfigurationService;
 
@@ -73,6 +73,8 @@ public class MapperHelper {
 
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanDTO request, CronogramaPagoBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();
+        String timeZone =  this.applicationConfigurationService.getProperty(DATE_TIME_ZONE);
+        DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
         response.setStartDate(new LocalDate(responseRimac.getPayload().get(0).getFechaInicio(), dateTimeZone));
         response.setMaturityDate(new LocalDate(responseRimac.getPayload().get(0).getFechaFinal(), dateTimeZone));
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().stream().map(cronogramaPago -> createInstallment(cronogramaPago, request)).collect(Collectors.toList());
