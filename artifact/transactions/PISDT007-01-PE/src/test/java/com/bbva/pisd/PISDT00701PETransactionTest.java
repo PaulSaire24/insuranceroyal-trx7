@@ -15,18 +15,14 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
-import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
-import com.bbva.pisd.dto.insurance.simulation.InsuranceSimulationDTO;
 import com.bbva.pisd.lib.r030.PISDR030;
-import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.slf4j.Logger;
@@ -93,7 +89,7 @@ public class PISDT00701PETransactionTest {
 		mockDTO = MockDTO.getInstance();
 
 		doReturn("1a02cbcc-7298-4db8-895b-e5f6692bc89a").when(this.transaction).getQuotationid();
-		doReturn(new LocalDate()).when(this.transaction).getStartdate();
+		doReturn(new Date()).when(this.transaction).getStartdate();
 		doReturn(installmentsDTOS).when(this.transaction).getInstallmentplans();
 	}
 

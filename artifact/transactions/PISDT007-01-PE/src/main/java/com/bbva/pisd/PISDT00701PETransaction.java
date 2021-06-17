@@ -19,7 +19,7 @@ import java.util.Objects;
 public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDT00701PETransaction.class);
-
+	private static final DateTimeZone dateTimeZone = DateTimeZone.forID("GMT");
 	/**
 	 * The execute method...
 	 */
@@ -35,7 +35,8 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 
 		FinancingPlanDTO input = new FinancingPlanDTO();
 		input.setQuotationId(this.getQuotationid());
-		input.setStartDate(this.getStartdate());
+		if(Objects.nonNull(this.getStartdate()))
+			input.setStartDate(new LocalDate(this.getStartdate(), dateTimeZone));
 		input.setInstallmentPlans(this.getInstallmentplans());
 		input.setCreationUser((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
 		input.setUserAudit((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
