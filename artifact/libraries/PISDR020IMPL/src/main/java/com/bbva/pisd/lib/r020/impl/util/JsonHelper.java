@@ -2,6 +2,9 @@ package com.bbva.pisd.lib.r020.impl.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.codehaus.jackson.map.ext.JodaSerializers;
+
+import java.time.LocalDate;
 
 public class JsonHelper {
 
@@ -13,6 +16,7 @@ public class JsonHelper {
     private JsonHelper() {
         gson = new GsonBuilder()
                 .setDateFormat(DATE)
+                .registerTypeAdapter(LocalDate.class, new JodaSerializers.LocalDateSerializer())
                 .create();
     }
 
