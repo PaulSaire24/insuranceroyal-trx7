@@ -101,6 +101,9 @@ public class PISDT00701PETransactionTest {
 		// Example to Mock the Header
 		// Mockito.doReturn("ES").when(header).getHeaderParameter(RequestHeaderParamsName.COUNTRYCODE);
 		Assert.assertNotNull(this.transaction);
+		Assert.assertNotNull(this.transaction.getStartdate());
+		Assert.assertNotNull(this.transaction.getQuotationid());
+		Assert.assertNotNull(this.transaction.getInstallmentplans());
 		this.transaction.execute();
 	}
 
