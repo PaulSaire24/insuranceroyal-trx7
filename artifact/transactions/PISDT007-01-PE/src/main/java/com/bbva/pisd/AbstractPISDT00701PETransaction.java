@@ -27,9 +27,8 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	/**
 	 * Return value for input parameter startDate
 	 */
-	protected LocalDate getStartdate(){
-		DateTimeZone dateTimeZone = DateTimeZone.forID("Etc/GMT-5");
-		return new LocalDate (this.getParameter("startDate"), dateTimeZone);
+	protected Date getStartdate(){
+		return (Date)this.getParameter("startDate");
 	}
 
 	/**
@@ -42,14 +41,14 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	/**
 	 * Set value for Date output parameter startDate
 	 */
-	protected void setStartdate(final LocalDate field){
+	protected void setStartdate(final Date field){
 		this.addParameter("startDate", field);
 	}
 
 	/**
 	 * Set value for Date output parameter maturityDate
 	 */
-	protected void setMaturitydate(final LocalDate field){
+	protected void setMaturitydate(final Date field){
 		this.addParameter("maturityDate", field);
 	}
 
