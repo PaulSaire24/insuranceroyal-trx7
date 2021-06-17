@@ -104,7 +104,9 @@ public class PISDT00701PETransactionTest {
 		Assert.assertNotNull(this.transaction);
 		Assert.assertNotNull(this.transaction.getStartdate());
 		Assert.assertNotNull(this.transaction.getQuotationid());
-		Assert.assertNotNull(this.transaction.getInstallmentplans());
+		Assert.assertNull(getParameter("startDate"));
+		Assert.assertNull(getParameter("quotationId"));
+		Assert.assertNull(getParameter("installmentPlans"));
 		this.transaction.execute();
 	}
 
