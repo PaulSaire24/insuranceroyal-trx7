@@ -12,6 +12,7 @@ import com.bbva.pisd.lib.r012.PISDR012;
 import com.bbva.pisd.lib.r020.PISDR020;
 import com.bbva.pisd.lib.r030.impl.PISDR030Impl;
 import com.bbva.pisd.lib.r030.impl.util.MapperHelper;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -109,8 +110,9 @@ public class PISDR030Test {
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 
 		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
-
-		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+		financingPlanDTO.setStartDate(new LocalDate());
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 
 		assertNull(validation);
 	}
