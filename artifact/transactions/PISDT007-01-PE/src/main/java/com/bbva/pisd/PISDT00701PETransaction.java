@@ -20,9 +20,6 @@ import java.util.Objects;
 public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDT00701PETransaction.class);
-	private final String DATE_TIME_ZONE = "DATE_TIME_ZONE";
-	protected ApplicationConfigurationService applicationConfigurationService;
-
 	/**
 	 * The execute method...
 	 */
@@ -35,8 +32,7 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 		LOGGER.info("Cabecera traceId: {}", this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.REQUESTID));
 
 		PISDR030 pisdr030 = this.getServiceLibrary(PISDR030.class);
-		String timeZone =  this.applicationConfigurationService.getProperty(DATE_TIME_ZONE);
-		DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
+		DateTimeZone dateTimeZone = DateTimeZone.forID("GMT");
 
 		FinancingPlanDTO input = new FinancingPlanDTO();
 		input.setQuotationId(this.getQuotationid());
