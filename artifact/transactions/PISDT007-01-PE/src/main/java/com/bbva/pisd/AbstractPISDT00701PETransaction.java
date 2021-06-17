@@ -28,7 +28,7 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	 * Return value for input parameter startDate
 	 */
 	protected LocalDate getStartdate(){
-		DateTimeZone dateTimeZone = DateTimeZone.forID("America/Lima");
+		DateTimeZone dateTimeZone = DateTimeZone.forID("Etc/GMT-5");
 		return new LocalDate (this.getParameter("startDate"), dateTimeZone);
 	}
 
