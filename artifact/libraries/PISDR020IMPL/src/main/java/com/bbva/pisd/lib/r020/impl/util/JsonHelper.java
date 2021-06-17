@@ -4,7 +4,6 @@ import com.google.gson.*;
 import org.joda.time.LocalDate;
 
 import java.lang.reflect.Type;
-import java.time.format.DateTimeFormatter;
 
 public class JsonHelper {
 

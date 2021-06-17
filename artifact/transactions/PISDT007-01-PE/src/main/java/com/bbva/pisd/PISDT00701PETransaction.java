@@ -10,6 +10,8 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 /**
  * Get financing plan
  *
@@ -29,18 +31,13 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 
 		LOGGER.info("Cabecera traceId: {}", this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.REQUESTID));
 
-		LOGGER.info("Cabecera setStartDate: {}", this.getStartdate());
-
-
 		PISDR030 pisdr030 = this.getServiceLibrary(PISDR030.class);
 		DateTimeZone dateTimeZone = DateTimeZone.forID("Etc/GMT-5");
 
 		FinancingPlanDTO input = new FinancingPlanDTO();
 		input.setQuotationId(this.getQuotationid());
-		input.setStartDate(new LocalDate(this.getStartdate(), dateTimeZone));
-
-		LOGGER.info("Cabecera setStartDateNew: {}", input.getStartDate());
-
+		if(Objects.nonNull(this.getStartdate()))
+			input.setStartDate(new LocalDate(this.getStartdate(), dateTimeZone));
 		input.setInstallmentPlans(this.getInstallmentplans());
 		input.setCreationUser((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
 		input.setUserAudit((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
