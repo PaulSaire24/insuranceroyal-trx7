@@ -8,10 +8,9 @@ import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.dto.insurance.utils.PISDValidation;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.LocalDate;
 import java.util.Map;
 import java.util.Objects;
 
@@ -86,11 +85,10 @@ public class PISDR030Impl extends PISDR030Abstract {
 	public FinancingPlanDTO isStartDateValid(FinancingPlanDTO input, QuotDetailDAO quotationDetails) {
 		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
 		LocalDate date = LocalDate.now();
-		java.sql.Date now = java.sql.Date.valueOf(date);
 		if (Objects.isNull(input.getStartDate())) {
-			input.setStartDate(now);
+			input.setStartDate(date);
 			financingPlanDTO = executeQuoteSchedule(input,quotationDetails);
-		} else if(Objects.nonNull(input.getStartDate()) && now.before(input.getStartDate())) {
+		} else if(Objects.nonNull(input.getStartDate()) && date.isBefore(input.getStartDate())) {
 			financingPlanDTO = executePaymentSchedule(input,quotationDetails);
 		} else {
 			financingPlanDTO = null;

@@ -2,10 +2,8 @@ package com.bbva.pisd;
 
 import com.bbva.elara.transaction.AbstractTransaction;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.joda.time.LocalDate;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,10 +25,8 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	/**
 	 * Return value for input parameter startDate
 	 */
-	@JsonSerialize(as = Date.class)
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="PET")
-	protected Date getStartdate(){
-		return (Date)this.getParameter("startDate");
+	protected LocalDate getStartdate(){
+		return (LocalDate)this.getParameter("startDate");
 	}
 
 	/**
@@ -43,14 +39,14 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	/**
 	 * Set value for Date output parameter startDate
 	 */
-	protected void setStartdate(final Date field){
+	protected void setStartdate(final LocalDate field){
 		this.addParameter("startDate", field);
 	}
 
 	/**
 	 * Set value for Date output parameter maturityDate
 	 */
-	protected void setMaturitydate(final Date field){
+	protected void setMaturitydate(final LocalDate field){
 		this.addParameter("maturityDate", field);
 	}
 

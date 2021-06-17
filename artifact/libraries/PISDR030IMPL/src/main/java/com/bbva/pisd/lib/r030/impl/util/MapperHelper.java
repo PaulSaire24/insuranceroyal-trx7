@@ -11,7 +11,7 @@ import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
 
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class MapperHelper {
