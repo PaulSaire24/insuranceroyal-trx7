@@ -10,6 +10,7 @@ import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class MapperHelper {
 
     private final String RIMAC = "RIMAC";
     private final String CUOTA = "CUOTA";
+    private static final DateTimeZone dateTimeZone = DateTimeZone.forID("GMT");
 
     protected ApplicationConfigurationService applicationConfigurationService;
 
@@ -71,6 +73,8 @@ public class MapperHelper {
 
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanDTO request, CronogramaPagoBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();
+        response.setStartDate(new LocalDate(responseRimac.getPayload().get(0).getFechaInicio(), dateTimeZone));
+        response.setMaturityDate(new LocalDate(responseRimac.getPayload().get(0).getFechaFinal(), dateTimeZone));
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().stream().map(cronogramaPago -> createInstallment(cronogramaPago, request)).collect(Collectors.toList());
         response.setInstallmentPlans(installmentsDTOS);
         return response;

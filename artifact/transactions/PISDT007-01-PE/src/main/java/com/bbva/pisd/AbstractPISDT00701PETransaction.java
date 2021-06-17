@@ -2,7 +2,6 @@ package com.bbva.pisd;
 
 import com.bbva.elara.transaction.AbstractTransaction;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
-import org.joda.time.LocalDate;
 
 import java.util.Date;
 import java.util.List;
@@ -40,14 +39,14 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	/**
 	 * Set value for Date output parameter startDate
 	 */
-	protected void setStartdate(final LocalDate field){
+	protected void setStartdate(final Date field){
 		this.addParameter("startDate", field);
 	}
 
 	/**
 	 * Set value for Date output parameter maturityDate
 	 */
-	protected void setMaturitydate(final LocalDate field){
+	protected void setMaturitydate(final Date field){
 		this.addParameter("maturityDate", field);
 	}
 

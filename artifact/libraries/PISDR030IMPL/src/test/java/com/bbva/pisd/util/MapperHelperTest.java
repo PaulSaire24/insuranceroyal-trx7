@@ -2,31 +2,20 @@ package com.bbva.pisd.util;
 
 import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
-import com.bbva.pisd.dto.insurance.aso.tier.TierASO;
-import com.bbva.pisd.dto.insurance.aso.tier.TierDataASO;
-import com.bbva.pisd.dto.insurance.bo.DatoParticularBO;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
-import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
-import com.bbva.pisd.dto.insurance.bo.simulation.InsuranceSimulationBO;
 import com.bbva.pisd.dto.insurance.commons.*;
 import com.bbva.pisd.dto.insurance.dao.*;
-import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
 import com.bbva.pisd.dto.insurance.simulation.InsuranceSimulationDTO;
 import com.bbva.pisd.dto.insurance.simulation.SimulationCompanyDTO;
 import com.bbva.pisd.dto.insurance.simulation.VehicleDTO;
-import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.lib.r030.impl.util.MapperHelper;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
