@@ -32,12 +32,10 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 		LOGGER.info("Cabecera traceId: {}", this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.REQUESTID));
 
 		PISDR030 pisdr030 = this.getServiceLibrary(PISDR030.class);
-		DateTimeZone dateTimeZone = DateTimeZone.forID("Etc/GMT-5");
 
 		FinancingPlanDTO input = new FinancingPlanDTO();
 		input.setQuotationId(this.getQuotationid());
-		if(Objects.nonNull(this.getStartdate()))
-			input.setStartDate(new LocalDate(this.getStartdate(), dateTimeZone));
+		input.setStartDate(this.getStartdate());
 		input.setInstallmentPlans(this.getInstallmentplans());
 		input.setCreationUser((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
 		input.setUserAudit((String) this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.USERCODE));
@@ -47,8 +45,8 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 		FinancingPlanDTO output = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 
 		if(output != null) {
-			this.setStartdate(output.getStartDate().toDateTimeAtCurrentTime().toDate());
-			this.setMaturitydate(output.getMaturityDate().toDateTimeAtCurrentTime().toDate());
+			this.setStartdate(output.getStartDate());
+			this.setMaturitydate(output.getMaturityDate());
 			this.setInstallmentplans(output.getInstallmentPlans());
 			this.setHttpResponseCode(HttpResponseCode.HTTP_CODE_200, Severity.OK);
 		} else {
