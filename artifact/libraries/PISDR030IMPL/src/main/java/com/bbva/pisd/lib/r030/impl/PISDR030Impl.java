@@ -86,19 +86,11 @@ public class PISDR030Impl extends PISDR030Abstract {
 		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
 		LocalDate date = new LocalDate();
 		if (Objects.isNull(input.getStartDate())) {
-			System.out.println("1: " + input.getStartDate());
-			System.out.println("date: " + date);
-
 			input.setStartDate(date);
 			financingPlanDTO = executeQuoteSchedule(input,quotationDetails);
 		} else if(Objects.nonNull(input.getStartDate()) && input.getStartDate().isAfter(date.minusDays(1))) {
-			System.out.println("2: " + input.getStartDate());
-			System.out.println("date: " + date);
-
 			financingPlanDTO = executePaymentSchedule(input,quotationDetails);
 		} else {
-			System.out.println("3: " + input.getStartDate());
-			System.out.println("date: " + date);
 			financingPlanDTO = null;
 			this.addAdvice(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE.getAdviceCode());
 			throw PISDValidation.build(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE);

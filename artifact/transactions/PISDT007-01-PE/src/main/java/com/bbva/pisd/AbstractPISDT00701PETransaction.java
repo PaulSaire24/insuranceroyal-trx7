@@ -2,8 +2,6 @@ package com.bbva.pisd;
 
 import com.bbva.elara.transaction.AbstractTransaction;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDate;
 
 import java.util.Date;
 import java.util.List;
