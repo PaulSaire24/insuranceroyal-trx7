@@ -2,6 +2,7 @@ package com.bbva.pisd;
 
 import com.bbva.elara.transaction.AbstractTransaction;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
 import java.util.Date;
@@ -27,7 +28,8 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	 * Return value for input parameter startDate
 	 */
 	protected LocalDate getStartdate(){
-		return (LocalDate)this.getParameter("startDate");
+		DateTimeZone dateTimeZone = DateTimeZone.forID("GMT");
+		return new LocalDate(this.getParameter("startDate"), dateTimeZone);
 	}
 
 	/**
