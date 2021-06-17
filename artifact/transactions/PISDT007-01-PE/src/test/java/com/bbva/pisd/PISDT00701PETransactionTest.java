@@ -10,6 +10,7 @@ import com.bbva.elara.test.osgi.DummyBundleContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 
@@ -92,7 +93,7 @@ public class PISDT00701PETransactionTest {
 		mockDTO = MockDTO.getInstance();
 
 		doReturn("1a02cbcc-7298-4db8-895b-e5f6692bc89a").when(this.transaction).getQuotationid();
-		doReturn(new LocalDate()).when(this.transaction).getStartdate();
+		doReturn(new Date()).when(this.transaction).getStartdate();
 		doReturn(installmentsDTOS).when(this.transaction).getInstallmentplans();
 	}
 
