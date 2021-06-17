@@ -84,7 +84,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 
 	public FinancingPlanDTO isStartDateValid(FinancingPlanDTO input, QuotDetailDAO quotationDetails) {
 		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
-		LocalDate date = LocalDate.now();
+		LocalDate date = new LocalDate();
 		if (Objects.isNull(input.getStartDate())) {
 			input.setStartDate(date);
 			financingPlanDTO = executeQuoteSchedule(input,quotationDetails);
