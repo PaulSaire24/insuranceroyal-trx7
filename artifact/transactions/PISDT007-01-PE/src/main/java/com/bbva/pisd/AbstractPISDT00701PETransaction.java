@@ -26,7 +26,7 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	 * Return value for input parameter startDate
 	 */
 	protected LocalDate getStartdate(){
-		return (LocalDate)this.getParameter("startDate");
+		return new LocalDate(this.getParameter("startDate"));
 	}
 
 	/**
