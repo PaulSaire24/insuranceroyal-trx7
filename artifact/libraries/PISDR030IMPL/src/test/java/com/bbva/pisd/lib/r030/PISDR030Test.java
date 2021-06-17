@@ -111,9 +111,21 @@ public class PISDR030Test {
 
 		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
 		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
-		financingPlanDTO.setStartDate(new LocalDate());
+		financingPlanDTO.setStartDate(new LocalDate().plusDays(2));
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
+		assertNull(validation);
+	}
 
+	@Test
+	public void executePaymentScheduleDateNotRange() {
+		LOGGER.info("PISDR030Test Executing executePaymentSchedule ...");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
+		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+		financingPlanDTO.setStartDate(new LocalDate().minusDays(2));
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 		assertNull(validation);
 	}
 }
