@@ -2,6 +2,7 @@ package com.bbva.pisd;
 
 import com.bbva.elara.transaction.AbstractTransaction;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
+
 import java.util.Date;
 import java.util.List;
 
@@ -50,17 +51,9 @@ public abstract class AbstractPISDT00701PETransaction extends AbstractTransactio
 	}
 
 	/**
-	 * Set value for List<InstallmentsDTO> output parameter installmentsPlans
+	 * Set value for List<InstallmentsDTO> output parameter installmentPlans
 	 */
 	protected void setInstallmentplans(final List<InstallmentsDTO> field){
 		this.addParameter("installmentPlans", field);
 	}
-
-	/**
-	 * Set value for Long output parameter totalNumberInstallments
-	 */
-	protected void setTotalnumberinstallments(final Long field){
-		this.addParameter("totalNumberInstallments", field);
-	}
-
 }
