@@ -2,12 +2,8 @@ package com.bbva.pisd.util;
 
 import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
-import com.bbva.pisd.dto.insurance.aso.tier.TierASO;
-import com.bbva.pisd.dto.insurance.aso.tier.TierDataASO;
-import com.bbva.pisd.dto.insurance.bo.DatoParticularBO;
-import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
-import com.bbva.pisd.dto.insurance.bo.simulation.InsuranceSimulationBO;
 import com.bbva.pisd.dto.insurance.commons.*;
 import com.bbva.pisd.dto.insurance.dao.*;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
@@ -15,16 +11,11 @@ import com.bbva.pisd.dto.insurance.mock.MockDTO;
 import com.bbva.pisd.dto.insurance.simulation.InsuranceSimulationDTO;
 import com.bbva.pisd.dto.insurance.simulation.SimulationCompanyDTO;
 import com.bbva.pisd.dto.insurance.simulation.VehicleDTO;
-import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.lib.r030.impl.util.MapperHelper;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -91,19 +82,27 @@ public class MapperHelperTest {
         FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
         QuotDetailDAO quotDetailDAO = new QuotDetailDAO();
         quotDetailDAO.setRimacId("c9debdc9-d7e1-4464-8b3a-990c17eb9f48");
-        FinancingPlanBO requestRimac = mapperHelper.createRequestRimac(request,quotDetailDAO);
+        FinancingPlanBO requestRimac = mapperHelper.createRequestQuoteScheduleRimac(request,quotDetailDAO);
         assertNotNull(requestRimac.getPayload());
     }
 
+
     @Test
     public void mapSimulateInsuranceQuotationInstallmentPlanResponseValues() throws IOException {
-        FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
-        FinancingPlanBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponse();
-        mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(financingPlanDTO,responseRimac);
-        assertNotNull(financingPlanDTO.getQuotationId());
-        assertNotNull(financingPlanDTO.getStartDate());
-        assertNotNull(financingPlanDTO.getInstallmentPlans());
-        assertNotNull(financingPlanDTO.getTotalNumberInstallments());
-        assertNotNull(financingPlanDTO.getMaturityDate());
+        FinancingPlanDTO output = new FinancingPlanDTO();
+        FinancingPlanBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
+        output = mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(responseRimac);
+        assertNotNull(output.getMaturityDate());
+        assertNotNull(output.getMaturityDate());
+        assertNotNull(output.getInstallmentPlans());
+    }
+
+    @Test
+    public void mapSimulateInsuranceQuotationInstallmentPlanResponseValuesWithCronogramaPago() throws IOException {
+        FinancingPlanDTO output = new FinancingPlanDTO();
+        FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
+        CronogramaPagoBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanCronogramaPagoResponseRimac();
+        output = mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(request, responseRimac);
+        assertNotNull(output.getInstallmentPlans());
     }
 }

@@ -4,6 +4,7 @@ import com.bbva.elara.configuration.manager.application.ApplicationConfiguration
 import com.bbva.elara.domain.transaction.Context;
 import com.bbva.elara.domain.transaction.ThreadContext;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
+import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
@@ -11,6 +12,7 @@ import com.bbva.pisd.lib.r012.PISDR012;
 import com.bbva.pisd.lib.r020.PISDR020;
 import com.bbva.pisd.lib.r030.impl.PISDR030Impl;
 import com.bbva.pisd.lib.r030.impl.util.MapperHelper;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,14 +93,40 @@ public class PISDR030Test {
 	}
 
 	@Test
-	public void executeSimulateInsuranceQuotationInstallmentPlanWithoutResponseFromRimac() {
-		LOGGER.info("PISDR030Test Executing executeSimulateInsuranceQuotationInstallmentPlanWithoutResponseFromRimac ...");
+	public void executeQuoteSchedule() {
+		LOGGER.info("PISDR030Test Executing executeQuoteSchedule ...");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 
-		when(pisdr020.executeSimulateInsuranceQuotationInstallmentPlan(anyObject(), anyString())).thenReturn(null);
+		when(pisdr020.executeQuoteSchedule(anyObject(), anyString())).thenReturn(null);
 
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+		assertNull(validation);
+	}
+
+	@Test
+	public void executePaymentSchedule() {
+		LOGGER.info("PISDR030Test Executing executePaymentSchedule ...");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
+		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+		financingPlanDTO.setStartDate(new LocalDate().plusDays(2));
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
+		assertNull(validation);
+	}
+
+	@Test
+	public void executePaymentScheduleDateNotRange() {
+		LOGGER.info("PISDR030Test Executing executePaymentSchedule ...");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
+		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+		financingPlanDTO.setStartDate(new LocalDate().minusDays(2));
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 		assertNull(validation);
 	}
 }
