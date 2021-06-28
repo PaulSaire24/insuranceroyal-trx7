@@ -10,10 +10,13 @@ import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
+import com.bbva.pisd.dto.insurance.utils.PISDErrors;
+import com.bbva.pisd.dto.insurance.utils.PISDValidation;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MapperHelper {
@@ -45,8 +48,8 @@ public class MapperHelper {
 
     private FinanciamientoBO createCuotaFinanciamiento (InstallmentsDTO installmentsDTO, FinancingPlanDTO financingPlanDTO) {
         FinanciamientoBO financiamientoBO = new FinanciamientoBO();
-        String frecuencia =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
-        String numeroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
+        String frecuencia = isValidateProperties(RIMAC, installmentsDTO.getPeriod().getId());
+        String numeroCuotas = isValidateProperties(CUOTA, installmentsDTO.getPeriod().getId());
         financiamientoBO.setFrecuencia(frecuencia);
         financiamientoBO.setNumeroCuotas(Long.parseLong(numeroCuotas));
         financiamientoBO.setFechaInicio(financingPlanDTO.getStartDate());
@@ -55,8 +58,8 @@ public class MapperHelper {
 
     private FinanciamientoBO createCuotaFinanciamiento (InstallmentsDTO installmentsDTO) {
         FinanciamientoBO financiamientoBO = new FinanciamientoBO();
-        String periodoId =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
-        String nroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
+        String periodoId = isValidateProperties(RIMAC, installmentsDTO.getPeriod().getId());
+        String nroCuotas = isValidateProperties(CUOTA, installmentsDTO.getPeriod().getId());
         financiamientoBO.setPeriodo(periodoId);
         financiamientoBO.setNroCuotas(Long.parseLong(nroCuotas));
         return financiamientoBO;
@@ -105,6 +108,12 @@ public class MapperHelper {
         installmentsDTO.setPeriod(period);
         installmentsDTO.setPaymentAmount(amount);
         return installmentsDTO;
+    }
+
+    public String isValidateProperties(String prefijo, String key){
+        String value = this.applicationConfigurationService.getProperty(prefijo + key);
+        if(Objects.nonNull(value)) return value;
+        else throw PISDValidation.build(PISDErrors.ERROR_NOT_PERIOD_VALIDATE);
     }
 
     public void setApplicationConfigurationService(ApplicationConfigurationService applicationConfigurationService) {
