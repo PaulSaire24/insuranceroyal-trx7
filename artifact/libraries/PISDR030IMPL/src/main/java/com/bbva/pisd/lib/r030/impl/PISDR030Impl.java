@@ -4,6 +4,7 @@ import com.bbva.apx.exception.business.BusinessException;
 import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
+import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
@@ -11,8 +12,12 @@ import com.bbva.pisd.dto.insurance.utils.PISDValidation;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -22,6 +27,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class PISDR030Impl extends PISDR030Abstract {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDR030Impl.class);
+	private static final String ARRAY_PERIOD = "ARRAY_PERIOD";
 
 	@Override
 	public FinancingPlanDTO executeSimulateInsuranceQuotationInstallmentPlan (FinancingPlanDTO input) {
@@ -31,6 +37,10 @@ public class PISDR030Impl extends PISDR030Abstract {
 		FinancingPlanDTO response = new FinancingPlanDTO();
 
 		try {
+
+			LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan | validatePeriod *****");
+
+			validatePeriod(input);
 
 			Map<String, Object> responseQueryGetQuotationService = this.pisdR012.executeRegisterAdditionalCompanyQuotaId(input.getQuotationId());
 
@@ -117,5 +127,15 @@ public class PISDR030Impl extends PISDR030Abstract {
 		QuotDetailDAO quotationDetails = new QuotDetailDAO();
 		quotationDetails.setRimacId((String) responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue()));
 		return quotationDetails;
+	}
+
+	private void validatePeriod(FinancingPlanDTO input){
+		List arrayPeriod =  Arrays.asList(this.applicationConfigurationService.getProperty(ARRAY_PERIOD).split(","));
+		List<InstallmentsDTO> period = input.getInstallmentPlans().stream()
+				.filter(p -> arrayPeriod.contains(p.getPeriod().getId())).collect(Collectors.toList());
+		if(input.getInstallmentPlans().size() > period.size()) {
+			this.addAdvice(PISDErrors.ERROR_NOT_PERIOD_VALIDATE.getAdviceCode());
+			throw PISDValidation.build(PISDErrors.ERROR_NOT_PERIOD_VALIDATE);
+		}
 	}
 }

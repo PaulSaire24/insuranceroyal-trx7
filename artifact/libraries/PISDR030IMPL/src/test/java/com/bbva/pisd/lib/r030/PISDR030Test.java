@@ -60,6 +60,10 @@ public class PISDR030Test {
 
 		mockDTO = MockDTO.getInstance();
 
+		applicationConfigurationService = mock(ApplicationConfigurationService.class);
+
+		when(applicationConfigurationService.getProperty("ARRAY_PERIOD")).thenReturn("ANNUAL,BIMONTHLY,MONTHLY,SEMIANNUAL,QUARTERLY");
+
 		pisdr030.setApplicationConfigurationService(applicationConfigurationService);
 
 		mapperHelper = mock(MapperHelper.class);
@@ -75,6 +79,7 @@ public class PISDR030Test {
 
 		responseQueryGetQuotationService = mock(Map.class);
 
+		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue())).thenReturn("9a64a5ed-509f-4baa-88e3-a0e373b49e65");
 		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue())).thenReturn("9a64a5ed-509f-4baa-88e3-a0e373b49e65");
 
 		entityOut = mock(FinancingPlanDTO.class);
@@ -105,27 +110,40 @@ public class PISDR030Test {
 	}
 
 	@Test
-	public void executePaymentSchedule() {
+	public void executePaymentSchedule() throws IOException {
 		LOGGER.info("PISDR030Test Executing executePaymentSchedule ...");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 
 		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
-		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
 		financingPlanDTO.setStartDate(new LocalDate().plusDays(2));
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 		assertNull(validation);
 	}
 
 	@Test
-	public void executePaymentScheduleDateNotRange() {
+	public void executePaymentScheduleDateNotRange() throws IOException {
 		LOGGER.info("PISDR030Test Executing executePaymentSchedule ...");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 
 		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
-		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
 		financingPlanDTO.setStartDate(new LocalDate().minusDays(2));
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
+		assertNull(validation);
+	}
+
+	@Test
+	public void executePaymentScheduleDatePeriodNotValid() throws IOException {
+		LOGGER.info("PISDR030Test Executing executePaymentScheduleDatePeriodNotValid ...");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
+		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
+		financingPlanDTO.getInstallmentPlans().get(0).getPeriod().setId("");
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 		assertNull(validation);
 	}
