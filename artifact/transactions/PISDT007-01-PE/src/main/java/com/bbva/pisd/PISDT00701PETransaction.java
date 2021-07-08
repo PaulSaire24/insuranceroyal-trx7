@@ -1,6 +1,5 @@
 package com.bbva.pisd;
 
-import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.elara.domain.transaction.Severity;
 import com.bbva.elara.domain.transaction.response.HttpResponseCode;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
