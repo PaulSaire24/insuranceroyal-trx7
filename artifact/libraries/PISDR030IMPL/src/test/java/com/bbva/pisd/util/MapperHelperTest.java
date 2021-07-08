@@ -12,6 +12,7 @@ import com.bbva.pisd.dto.insurance.simulation.InsuranceSimulationDTO;
 import com.bbva.pisd.dto.insurance.simulation.SimulationCompanyDTO;
 import com.bbva.pisd.dto.insurance.simulation.VehicleDTO;
 import com.bbva.pisd.lib.r030.impl.util.MapperHelper;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -78,11 +79,21 @@ public class MapperHelperTest {
     }
 
     @Test
-    public void createRequestRimac() throws IOException{
+    public void createQuoteScheduleRequestRimac() throws IOException{
         FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
         QuotDetailDAO quotDetailDAO = new QuotDetailDAO();
         quotDetailDAO.setRimacId("c9debdc9-d7e1-4464-8b3a-990c17eb9f48");
         FinancingPlanBO requestRimac = mapperHelper.createRequestQuoteScheduleRimac(request,quotDetailDAO);
+        assertNotNull(requestRimac.getPayload());
+    }
+
+    @Test
+    public void createPaymentScheduleRequestRimac() throws IOException{
+        FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
+        request.setStartDate(new LocalDate().plusDays(2));
+        QuotDetailDAO quotDetailDAO = new QuotDetailDAO();
+        quotDetailDAO.setRimacId("c9debdc9-d7e1-4464-8b3a-990c17eb9f48");
+        FinancingPlanBO requestRimac = mapperHelper.createRequestPaymentScheduleRimac(request);
         assertNotNull(requestRimac.getPayload());
     }
 

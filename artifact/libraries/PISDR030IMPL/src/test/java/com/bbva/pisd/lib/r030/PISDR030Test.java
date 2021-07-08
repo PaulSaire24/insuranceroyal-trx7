@@ -3,8 +3,8 @@ package com.bbva.pisd.lib.r030;
 import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.elara.domain.transaction.Context;
 import com.bbva.elara.domain.transaction.ThreadContext;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
-import com.bbva.pisd.dto.insurance.financing.EntityOutFinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
@@ -110,12 +110,40 @@ public class PISDR030Test {
 	}
 
 	@Test
+	public void executeQuoteScheduleWithResponse() throws IOException {
+		LOGGER.info("PISDR030Test Executing executeQuoteScheduleWithResponse ...");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+
+		FinancingPlanBO response = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
+
+		when(pisdr020.executeQuoteSchedule(anyObject(), anyString())).thenReturn(response);
+
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+		assertNull(validation);
+	}
+
+	@Test
 	public void executePaymentSchedule() throws IOException {
 		LOGGER.info("PISDR030Test Executing executePaymentSchedule ...");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
-
 		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
+
+		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
+		financingPlanDTO.setStartDate(new LocalDate().plusDays(2));
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
+		assertNull(validation);
+	}
+
+	@Test
+	public void executePaymentScheduleWithResponse() throws IOException {
+		LOGGER.info("PISDR030Test Executing executePaymentScheduleWithResponse ...");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+		CronogramaPagoBO response = mockDTO.getSimulateInsuranceQuotationInstallmentPlanCronogramaPagoResponseRimac();
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(response);
+
 		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
 		financingPlanDTO.setStartDate(new LocalDate().plusDays(2));
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
