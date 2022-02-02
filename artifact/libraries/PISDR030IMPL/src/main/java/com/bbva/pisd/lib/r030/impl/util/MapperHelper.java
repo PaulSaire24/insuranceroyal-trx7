@@ -84,7 +84,7 @@ public class MapperHelper {
         InstallmentsDTO installmentsDTO = new InstallmentsDTO();
         PaymentPeriodDTO period = new PaymentPeriodDTO();
         PaymentAmountDTO amount = new PaymentAmountDTO();
-        amount.setAmount(0.0);
+        amount.setAmount(financiamientoBO.getPrimaBruta().doubleValue());
         amount.setCurrency("USD");
         period.setId(request.getInstallmentPlans().get(0).getPeriod().getId());
         installmentsDTO.setPeriod(period);
