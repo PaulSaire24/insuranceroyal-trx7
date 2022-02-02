@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -113,6 +114,7 @@ public class MapperHelperTest {
         FinancingPlanDTO output = new FinancingPlanDTO();
         FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
         CronogramaPagoBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanCronogramaPagoResponseRimac();
+        responseRimac.getPayload().get(0).setPrimaBruta(new BigDecimal(584.5));
         output = mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(request, responseRimac);
         assertNotNull(output.getInstallmentPlans());
     }
