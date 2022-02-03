@@ -28,8 +28,6 @@ public class MapperHelperTest {
     private ApplicationConfigurationService applicationConfigurationService;
     private MockDTO mockDTO;
     private InsuranceProductDTO product;
-    private InsuranceProductDAO productDAO;
-
     private InsuranceSimulationDTO insuranceSimulationDTO;
     private VehicleDTO vehicleDTO;
     private VehicleModelDTO modelDTO;
@@ -53,7 +51,6 @@ public class MapperHelperTest {
         applicationConfigurationService = mock(ApplicationConfigurationService.class);
         mockDTO = MockDTO.getInstance();
         product = mock(InsuranceProductDTO.class);
-        productDAO = mock(InsuranceProductDAO.class);
 
         insuranceSimulationDTO = mock(InsuranceSimulationDTO.class);
         vehicleDTO = mock(VehicleDTO.class);
