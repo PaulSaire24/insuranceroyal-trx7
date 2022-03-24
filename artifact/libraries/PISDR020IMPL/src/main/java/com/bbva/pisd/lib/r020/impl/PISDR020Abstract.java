@@ -6,6 +6,7 @@ import com.bbva.elara.utility.api.connector.APIConnector;
 import com.bbva.elara.utility.api.connector.APIConnectorBuilder;
 import com.bbva.pisd.lib.r014.PISDR014;
 import com.bbva.pisd.lib.r020.PISDR020;
+import com.bbva.pisd.lib.r020.impl.util.RimacUrlForker;
 
 /**
  * This class automatically defines the libraries and utilities that it will use.
@@ -20,7 +21,7 @@ public abstract class PISDR020Abstract extends AbstractLibrary implements PISDR0
 
 	protected PISDR014 pisdR014;
 
-
+	protected RimacUrlForker rimacUrlForker;
 	/**
 	* @param applicationConfigurationService the this.applicationConfigurationService to set
 	*/
@@ -49,4 +50,5 @@ public abstract class PISDR020Abstract extends AbstractLibrary implements PISDR0
 		this.pisdR014 = pisdR014;
 	}
 
+	public void setRimacUrlForker(RimacUrlForker rimacUrlForker) { this.rimacUrlForker = rimacUrlForker; }
 }

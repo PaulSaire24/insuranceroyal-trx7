@@ -1,34 +1,22 @@
 package com.bbva.pisd.lib.r020;
 
-import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.elara.domain.transaction.Context;
 import com.bbva.elara.domain.transaction.ThreadContext;
 import com.bbva.elara.utility.api.connector.APIConnector;
 import com.bbva.pisd.dto.insurance.amazon.SignatureAWS;
-import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
-import com.bbva.pisd.dto.insurance.bo.detail.InsuranceQuotationDetailBO;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
-import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.lib.r014.PISDR014;
 import com.bbva.pisd.lib.r020.factory.ApiConnectorFactoryTest;
 import com.bbva.pisd.lib.r020.impl.PISDR020Impl;
+import com.bbva.pisd.lib.r020.impl.util.RimacUrlForker;
 import com.bbva.pisd.mock.MockBundleContext;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.Advised;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestClientException;
@@ -57,10 +45,9 @@ public class PISDR020Test {
 
 	private PISDR014 pisdr014;
 
-	private PISDProperties pisdProperties;
-
 	private MockDTO mockDTO;
 	private APIConnector externalApiConnector;
+	private RimacUrlForker rimacUrlForker;
 
 	@Before
 	public void setUp() {
@@ -76,6 +63,9 @@ public class PISDR020Test {
 		pisdr014 = mock(PISDR014.class);
 		pisdr020.setPisdR014(pisdr014);
 
+		rimacUrlForker=mock(RimacUrlForker.class);
+		pisdr020.setRimacUrlForker(rimacUrlForker);
+
 		when(pisdr014.executeSignatureConstruction(anyString(), anyString(), anyString(), anyString(), anyString()))
 				.thenReturn(new SignatureAWS("", "", "", ""));
 	}
@@ -89,7 +79,10 @@ public class PISDR020Test {
 		when(externalApiConnector.postForObject(anyString(), anyObject(), any()))
 				.thenReturn(responseRimac);
 
-		FinancingPlanBO validation = pisdr020.executeQuoteSchedule(new FinancingPlanBO(), TRACE_ID);
+		when(this.rimacUrlForker.generateUriForSignatureAWSQuoteSchedule(anyString(), anyObject())).thenReturn("/vehicular/V1/cotizacion/cronograma/calcular-cuota");
+		when(this.rimacUrlForker.generatePropertyKeyNameQuoteSchedule(anyString())).thenReturn("financingplan.rimac.830");
+
+		FinancingPlanBO validation = pisdr020.executeQuoteSchedule(new FinancingPlanBO(), TRACE_ID, "830", null);
 		assertNotNull(validation);
 		assertNotNull(validation.getPayload());
 		assertNotNull(validation.getPayload().getFechaInicio());
@@ -102,6 +95,23 @@ public class PISDR020Test {
 		assertNotNull(validation.getPayload().getFinanciamiento().get(0).getFinanciamiento());
 		assertNotNull(validation.getPayload().getFinanciamiento().get(0).getNumeroCuotasTotales());
 
+		when(externalApiConnector.postForObject(anyString(), anyObject(), any(), anyMap()))
+				.thenReturn(responseRimac);
+
+		FinancingPlanBO validation2 = pisdr020.executeQuoteSchedule(new FinancingPlanBO(), TRACE_ID, "832", null);
+
+		assertNotNull(validation2);
+		assertNotNull(validation2.getPayload());
+		assertNotNull(validation2.getPayload().getFechaInicio());
+		assertNotNull(validation2.getPayload().getCotizacion());
+		assertNotNull(validation2.getPayload().getFechaFin());
+		assertNotNull(validation2.getPayload().getFinanciamiento());
+		assertNotNull(validation2.getPayload().getFinanciamiento().get(0).getDescripcionPeriodo());
+		assertNotNull(validation2.getPayload().getFinanciamiento().get(0).getMoneda());
+		assertNotNull(validation2.getPayload().getFinanciamiento().get(0).getMontoCuota());
+		assertNotNull(validation2.getPayload().getFinanciamiento().get(0).getFinanciamiento());
+		assertNotNull(validation2.getPayload().getFinanciamiento().get(0).getNumeroCuotasTotales());
+
 	}
 
 	@Test
@@ -109,11 +119,12 @@ public class PISDR020Test {
 		LOGGER.info("PISDR020Test - Executing executePaymentScheduleServiceOK...");
 
 		CronogramaPagoBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanCronogramaPagoResponseRimac();
-
+		when(this.rimacUrlForker.generateUriForSignatureAWSPaymentSchedule(anyString(),anyString())).thenReturn("/vehicular/V1/cotizacion/9a64a5ed-509f-4baa-88e3-a0e373b49e65/cronogramapago");
+		when(this.rimacUrlForker.generatePropertyKeyNamePaymentSchedule(anyString())).thenReturn("paymentschedule.rimac.830");
 		when(externalApiConnector.postForObject(anyString(), anyObject(), any(), anyMap()))
 				.thenReturn(responseRimac);
 
-		CronogramaPagoBO validation = pisdr020.executePaymentSchedule(new FinancingPlanBO(), "123123", TRACE_ID);
+		CronogramaPagoBO validation = pisdr020.executePaymentSchedule(new FinancingPlanBO(), "123123", TRACE_ID, "830");
 		assertNotNull(validation);
 		assertNotNull(validation.getPayload());
 		assertNotNull(validation.getPayload().get(0).getFechaInicio());
@@ -130,8 +141,11 @@ public class PISDR020Test {
 
 		when(externalApiConnector.postForObject(anyString(), anyObject(), any()))
 				.thenThrow(new RestClientException(MESSAGE_EXCEPTION));
-
-		FinancingPlanBO validation = pisdr020.executeQuoteSchedule(new FinancingPlanBO(), TRACE_ID);
+		when(this.rimacUrlForker.generateUriForSignatureAWSQuoteSchedule(anyString(), anyObject())).
+		thenReturn("/vehicular/V1/cotizacion/cronograma/calcular-cuota");
+		when(this.rimacUrlForker.generatePropertyKeyNameQuoteSchedule(anyString())).
+		thenReturn("financingplan.rimac.830");
+		FinancingPlanBO validation = pisdr020.executeQuoteSchedule(new FinancingPlanBO(), TRACE_ID, "830", null);
 		assertNull(validation);
 	}
 
@@ -140,10 +154,13 @@ public class PISDR020Test {
 	public void executePaymentScheduleWithRestClientException() {
 		LOGGER.info("PISDR020Test - Executing executePaymentScheduleWithRestClientException...");
 
-		when(externalApiConnector.postForObject(anyString(), anyObject(), any()))
+		when(externalApiConnector.postForObject(anyString(), anyObject(), any(), anyMap()))
 				.thenThrow(new RestClientException(MESSAGE_EXCEPTION));
-
-		CronogramaPagoBO validation = pisdr020.executePaymentSchedule(new FinancingPlanBO(), "123123", TRACE_ID);
+		when(this.rimacUrlForker.generateUriForSignatureAWSPaymentSchedule(anyString(),anyString())).
+		thenReturn("/vehicular/V1/cotizacion/9a64a5ed-509f-4baa-88e3-a0e373b49e65/cronogramapago");
+		when(this.rimacUrlForker.generatePropertyKeyNamePaymentSchedule(anyString())).
+		thenReturn("paymentschedule.rimac.830");
+		CronogramaPagoBO validation = pisdr020.executePaymentSchedule(new FinancingPlanBO(), "123123", TRACE_ID, "830");
 		assertNull(validation);
 	}
 

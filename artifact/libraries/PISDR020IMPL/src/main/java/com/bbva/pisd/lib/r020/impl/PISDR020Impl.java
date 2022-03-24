@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClientException;
 
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.PathParam;
+
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,25 +28,39 @@ public class PISDR020Impl extends PISDR020Abstract {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDR020Impl.class);
 	private static final String AUTHORIZATION = "Authorization";
 	private static final String JSON_LOG = "JSON BODY TO SEND: {}";
-	private static final String ID_COTIZACION = "cotizacion-id";
 
 	@Override
-	public FinancingPlanBO executeQuoteSchedule (FinancingPlanBO input, String traceId) {
+	public FinancingPlanBO executeQuoteSchedule (FinancingPlanBO input, String traceId, String productId, String quotationId) {
 		LOGGER.info("***** PISDR020Impl - executeFinancingPlan START *****");
 		LOGGER.info("***** PISDR020Impl - executeFinancingPlan Param: {} *****", input);
+
+		Boolean enableVeh = true;
 
 		FinancingPlanBO output = null;
 
 		String requestJson = getRequestJson(input);
 
 		SignatureAWS signatureAWS = this.pisdR014.executeSignatureConstruction(requestJson, HttpMethod.POST,
-				PISDProperties.URI_FINANCING_PLAN.getValue(),null, traceId);
+				this.rimacUrlForker.generateUriForSignatureAWSQuoteSchedule(productId, quotationId),null, traceId);
 
 		HttpEntity<String> entity = new HttpEntity<>(requestJson, createHttpHeadersAWS(signatureAWS));
 		LOGGER.info(JSON_LOG, entity.getBody());
 
+		Map<String, Object> pathParams = null;
+
+		if(!productId.equals("830")){
+			pathParams = new HashMap<>();
+			pathParams.put("idCotizacion", quotationId);
+			enableVeh = false;
+		}
+
 		try {
-			output = this.externalApiConnector.postForObject(PISDProperties.ID_API_FINANCING_PLAN_RIMAC.getValue(), entity, FinancingPlanBO.class);
+			if(enableVeh){
+				output = this.externalApiConnector.postForObject(this.rimacUrlForker.generatePropertyKeyNameQuoteSchedule(productId), entity, FinancingPlanBO.class);
+			}else{
+				output = this.externalApiConnector.postForObject(this.rimacUrlForker.generatePropertyKeyNameQuoteSchedule(productId), entity, FinancingPlanBO.class, pathParams);
+			}
+			
 		} catch(RestClientException e) {
 			LOGGER.info("***** PISDR020Impl - executeFinancingPlan ***** Exception: {}", e.getMessage());
 			this.addAdvice(PISDErrors.ERROR_CONNECTION_SCHEDULE_QUOTE_RIMAC_SERVICE.getAdviceCode());
@@ -57,16 +73,15 @@ public class PISDR020Impl extends PISDR020Abstract {
 	}
 
 	@Override
-	public CronogramaPagoBO executePaymentSchedule(FinancingPlanBO input, String quotationId, String traceId) {
+	public CronogramaPagoBO executePaymentSchedule(FinancingPlanBO input, String quotationId, String traceId, String productId) {
 		LOGGER.info("***** PISDR020Impl - executePaymentSchedule START *****");
 		LOGGER.info("***** PISDR020Impl - executePaymentSchedule Param: {} *****", input);
 
 		CronogramaPagoBO output = null;
-		String uri = PISDProperties.URI_PAYMENT_SCHEDULE.getValue().replace(ID_COTIZACION, quotationId);
 		String requestJson = getRequestJson(input);
 
 		SignatureAWS signatureAWS = this.pisdR014.executeSignatureConstruction(requestJson, HttpMethod.POST,
-				uri,null, traceId);
+				this.rimacUrlForker.generateUriForSignatureAWSPaymentSchedule(productId, quotationId),null, traceId);
 
 		HttpEntity<String> entity = new HttpEntity<>(requestJson, createHttpHeadersAWS(signatureAWS));
 		LOGGER.info(JSON_LOG, entity.getBody());
@@ -75,7 +90,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 		pathParams.put("idCotizacion", quotationId);
 
 		try {
-			output = this.externalApiConnector.postForObject(PISDProperties.ID_API_PAYMENT_SCHEDULE_RIMAC.getValue(), entity, CronogramaPagoBO.class, pathParams);
+			output = this.externalApiConnector.postForObject(this.rimacUrlForker.generatePropertyKeyNamePaymentSchedule(productId), entity, CronogramaPagoBO.class, pathParams);
 		} catch(RestClientException e) {
 			LOGGER.info("***** PISDR020Impl - executePaymentSchedule ***** Exception: {}", e.getMessage());
 			this.addAdvice(PISDErrors.ERROR_CONNECTION_PAYMENT_SCHEDULE_RIMAC_SERVICE.getAdviceCode());

@@ -50,7 +50,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 
 			LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan | isStartDateValid *****");
 
-			response = isStartDateValid(input,quotationDetails);
+			response = isStartDateValid(input,quotationDetails, (String) responseQueryGetQuotationService.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue()));
 
 		}
 
@@ -62,11 +62,11 @@ public class PISDR030Impl extends PISDR030Abstract {
 		return response;
 	}
 
-	private FinancingPlanDTO executeQuoteSchedule (FinancingPlanDTO input, QuotDetailDAO quotationDetails) {
+	private FinancingPlanDTO executeQuoteSchedule (FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId) {
 
 		LOGGER.info("***** PISDR030Impl - executeQuoteSchedule *****");
 		FinancingPlanBO requestRimac = this.mapperHelper.createRequestQuoteScheduleRimac(input, quotationDetails);
-		FinancingPlanBO responseRimac = this.pisdR020.executeQuoteSchedule(requestRimac, input.getTraceId());
+		FinancingPlanBO responseRimac = this.pisdR020.executeQuoteSchedule(requestRimac, input.getTraceId(), productId, quotationDetails.getRimacId());
 		LOGGER.info("***** PISDR030Impl - validate SimulateInsuranceQuotationInstallmentPlan Service response *****");
 		try {
 			validateSimulateInsuranceQuotationInstallmentPlanResponse(responseRimac);
@@ -77,11 +77,11 @@ public class PISDR030Impl extends PISDR030Abstract {
 		return this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(responseRimac);
 	}
 
-	private FinancingPlanDTO executePaymentSchedule (FinancingPlanDTO input, QuotDetailDAO quotationDetails) {
+	private FinancingPlanDTO executePaymentSchedule (FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId) {
 
 		LOGGER.info("***** PISDR030Impl - executePaymentSchedule *****");
 		FinancingPlanBO requestRimac = this.mapperHelper.createRequestPaymentScheduleRimac(input);
-		CronogramaPagoBO responseRimac = this.pisdR020.executePaymentSchedule(requestRimac, quotationDetails.getRimacId(), input.getTraceId());
+		CronogramaPagoBO responseRimac = this.pisdR020.executePaymentSchedule(requestRimac, quotationDetails.getRimacId(), input.getTraceId(), productId);
 		LOGGER.info("***** PISDR030Impl - validate SimulateInsuranceQuotationInstallmentPlan Service response *****");
 		try {
 			validateSimulateInsuranceQuotationInstallmentPlanResponse(responseRimac);
@@ -92,14 +92,14 @@ public class PISDR030Impl extends PISDR030Abstract {
 		return this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(input, responseRimac);
 	}
 
-	public FinancingPlanDTO isStartDateValid(FinancingPlanDTO input, QuotDetailDAO quotationDetails) {
+	public FinancingPlanDTO isStartDateValid(FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId) {
 		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
 		LocalDate date = new LocalDate();
 		if (Objects.isNull(input.getStartDate())) {
 			input.setStartDate(date);
-			financingPlanDTO = executeQuoteSchedule(input,quotationDetails);
+			financingPlanDTO = executeQuoteSchedule(input,quotationDetails, productId);
 		} else if(Objects.nonNull(input.getStartDate()) && input.getStartDate().isAfter(date.minusDays(1))) {
-			financingPlanDTO = executePaymentSchedule(input,quotationDetails);
+			financingPlanDTO = executePaymentSchedule(input,quotationDetails, productId);
 		} else {
 			financingPlanDTO = null;
 			this.addAdvice(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE.getAdviceCode());
