@@ -91,3 +91,4 @@
 
 - **Versión 0.5.1**: Esta versión le permite obtener los datos de financiamiento a partir de servicios de Rimac.
 - **Versión 0.5.3**: Se efectúa un ajuste para devolver como salida de la Api el dato PrimaBruta del servicio Rimac generarCronogramaPago.
+- **Versión 0.5.4**: Esta versión permite manejar una bifurcación a la hora de consumir servicios de Rimac, lo que permitirá manejar uri's diferentes según el tipo de producto especificado.

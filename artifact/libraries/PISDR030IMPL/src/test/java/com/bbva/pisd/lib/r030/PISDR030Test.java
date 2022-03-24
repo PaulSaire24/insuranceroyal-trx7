@@ -80,7 +80,7 @@ public class PISDR030Test {
 		responseQueryGetQuotationService = mock(Map.class);
 
 		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue())).thenReturn("9a64a5ed-509f-4baa-88e3-a0e373b49e65");
-		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue())).thenReturn("9a64a5ed-509f-4baa-88e3-a0e373b49e65");
+		when(responseQueryGetQuotationService.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue())).thenReturn("830");
 
 		entityOut = mock(FinancingPlanDTO.class);
 
@@ -103,7 +103,7 @@ public class PISDR030Test {
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 
-		when(pisdr020.executeQuoteSchedule(anyObject(), anyString())).thenReturn(null);
+		when(pisdr020.executeQuoteSchedule(anyObject(), anyString(), anyString(), anyString())).thenReturn(null);
 
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 		assertNull(validation);
@@ -117,7 +117,7 @@ public class PISDR030Test {
 
 		FinancingPlanBO response = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
 
-		when(pisdr020.executeQuoteSchedule(anyObject(), anyString())).thenReturn(response);
+		when(pisdr020.executeQuoteSchedule(anyObject(), anyString(), anyString(), anyString())).thenReturn(response);
 
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
 		assertNull(validation);
@@ -128,7 +128,7 @@ public class PISDR030Test {
 		LOGGER.info("PISDR030Test Executing executePaymentSchedule ...");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
-		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString(), anyString())).thenReturn(null);
 
 		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
 		financingPlanDTO.setStartDate(new LocalDate().plusDays(2));
@@ -142,7 +142,7 @@ public class PISDR030Test {
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 		CronogramaPagoBO response = mockDTO.getSimulateInsuranceQuotationInstallmentPlanCronogramaPagoResponseRimac();
-		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(response);
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString(), anyString())).thenReturn(response);
 
 		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
 		financingPlanDTO.setStartDate(new LocalDate().plusDays(2));
@@ -156,7 +156,7 @@ public class PISDR030Test {
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 
-		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString(), anyString())).thenReturn(null);
 		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
 		financingPlanDTO.setStartDate(new LocalDate().minusDays(2));
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
@@ -169,7 +169,7 @@ public class PISDR030Test {
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 
-		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString())).thenReturn(null);
+		when(pisdr020.executePaymentSchedule(anyObject(), anyObject(), anyString(), anyString())).thenReturn(null);
 		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
 		financingPlanDTO.getInstallmentPlans().get(0).getPeriod().setId("");
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
