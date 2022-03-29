@@ -50,7 +50,7 @@
 > En este apartado se detallan todas las librerias internas creadas para implementar la logica de negocio de las transacciones.
 
 #### 3.1.1. Libreria PISDR020
-> EL uso de la Librería RBVDR020 está orientado a consumir el servicio de generación coronograma de pagos y
+> EL uso de la Librería PISDR020 está orientado a consumir el servicio de generación coronograma de pagos y
 >  y el servicio calculo de cuotas, ambos de Rimac.
 
 - **Método executeQuoteSchedule (FinancingPlanBO input, String traceId)**: Método para obtener el calendario de cuotas que genera Rimac
@@ -67,7 +67,8 @@
   ### 3.2. Librerias Externas
 > En este apartado se detallan las librebrias externas que hace uso esta aplicacion para acceder a fuentes de terceros.
 
-- **Libreria PISDR012**: [Ver documentaction](https://globaldevtools.bbva.com/bitbucket/projects/PE_PISD_APP-ID-26197_DSG/repos/insuranceroyal-lib12/browse/doc/PISD_APX_Library_PISDR012.md?at=refs%2Fheads%2Frelease%2F0.21)
+- **Libreria PISDR012**: [Ver documentaction](https://globaldevtools.bbva.com/bitbucket/projects/PE_PISD_APP-ID-26197_DSG/repos/insuranceroyal-lib12/browse/doc?at=refs%2Fheads%2Frelease%2F0.23)
+
   - Metodos reutilizados: executeRegisterAdditionalCompanyQuotaId().
 - **Libreria PISDR014**: [Ver documentaction](https://globaldevtools.bbva.com/bitbucket/projects/PE_PISD_APP-ID-26197_DSG/repos/insuranceroyal-lib14/browse/doc/PISD-insuranceroyal-lib14.md?at=refs%2Fheads%2Frelease%2F0.10)
   -  Metodos reutilizados: executeSignatureConstruction().
@@ -91,4 +92,4 @@
 
 - **Versión 0.5.1**: Esta versión le permite obtener los datos de financiamiento a partir de servicios de Rimac.
 - **Versión 0.5.3**: Se efectúa un ajuste para devolver como salida de la Api el dato PrimaBruta del servicio Rimac generarCronogramaPago.
-- **Versión 0.6.0**: Esta versión permite manejar una bifurcación a la hora de consumir servicios de Rimac, lo que permitirá manejar uri's diferentes según el tipo de producto especificado.
+- **Versión 0.6.1**: Esta versión permite manejar una bifurcación a la hora de consumir servicios de Rimac, lo que permitirá manejar uri's diferentes según el tipo de producto especificado.
