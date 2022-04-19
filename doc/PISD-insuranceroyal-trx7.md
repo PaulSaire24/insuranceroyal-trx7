@@ -15,7 +15,7 @@
   - Version: 01-PE
   - Respuestas:
     - Código de respuesta: Http Code: 200, Severity: OK
-    - Código de Respuesta: Http Code: 400, Severity: ENR
+    - Código de Respuesta: Severity: ENR
 
 ## 2. DTOs:
 
@@ -25,7 +25,6 @@
   - amazon:
     - **SignatureAWS**: Entidad SignatureAWS
   - bo:
-    - **FinanciamientoPayloadBO**: 
     - financing:
       - **FinancingPlanBO**: Entidad FinancingPlan - Rimac
       - **CronogramaPagoBO**: Entidad CronogramaPago - Rimac
@@ -53,9 +52,9 @@
 > EL uso de la Librería PISDR020 está orientado a consumir el servicio de generación coronograma de pagos y
 >  y el servicio calculo de cuotas, ambos de Rimac.
 
-- **Método executeQuoteSchedule (FinancingPlanBO input, String traceId)**: Método para obtener el calendario de cuotas que genera Rimac
+- **Método FinancingPlanBO executeQuoteSchedule (FinancingPlanBO request, String traceId, String productId, String quotationId)**: Método para obtener el calendario de cuotas que genera Rimac
   - Avisos a retornar: PISD00120027
-- **Método executePaymentSchedule(FinancingPlanBO input, String quotationId, String traceId)**: Método para obtener el cronograma de pago generado por Rimac
+- **Método CronogramaPagoBO executePaymentSchedule (FinancingPlanBO request, String quotationId, String traceId, String productId)**: Método para obtener el cronograma de pago generado por Rimac
   - Avisos a retornar: PISD00120031
 
 #### 3.1.2. Libreria PISDR030
