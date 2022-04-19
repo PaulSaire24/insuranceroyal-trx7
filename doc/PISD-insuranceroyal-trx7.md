@@ -8,7 +8,7 @@
 
 ### 1.1. Transaccion PISDT007
   - Descripcion: Obtiene los planes de financiamiento para el servicio simulateInsuranceQuotationInstallmentPlan de Insurances
-  - Tipo de Origen: Servicio de Negocio
+  - Tipo de Origen: Servicio de Negocio 
   - API de Negocio: [vehicle-insurances](https://catalogs.platform.bbva.com/apicatalog/business/apis/apis-insurances-insurances/versions/global-1.23.0/resources/insurancesapiquotationsquotationidinstallmentsplanssimulatev1/)
   - SMC del Servicio ASO: [Documento](https://docs.google.com/spreadsheets/d/1-HfiN65vmcMU6GOtIbQv45XQH-hVpTYx4dg-bZBHOu0/edit#gid=1587295576)
   - Usuario Transaccional: ZG13001
