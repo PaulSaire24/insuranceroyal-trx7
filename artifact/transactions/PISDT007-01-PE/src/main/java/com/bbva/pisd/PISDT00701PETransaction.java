@@ -19,9 +19,7 @@ import java.util.Objects;
 public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDT00701PETransaction.class);
-	/**
-	 * The execute method...
-	 */
+	
 	@Override
 	public void execute() {
 
