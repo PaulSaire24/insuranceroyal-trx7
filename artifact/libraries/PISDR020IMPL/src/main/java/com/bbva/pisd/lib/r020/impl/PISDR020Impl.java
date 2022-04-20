@@ -4,7 +4,6 @@ import com.bbva.pisd.dto.insurance.amazon.SignatureAWS;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
-import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.lib.r020.impl.util.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClientException;
 
 import javax.ws.rs.HttpMethod;
-import javax.ws.rs.PathParam;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
