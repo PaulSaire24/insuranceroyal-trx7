@@ -8,14 +8,14 @@
 
 ### 1.1. Transaccion PISDT007
   - Descripcion: Obtiene los planes de financiamiento para el servicio simulateInsuranceQuotationInstallmentPlan de Insurances
-  - Tipo de Origen: Servicio de Negocio
+  - Tipo de Origen: Servicio de Negocio 
   - API de Negocio: [vehicle-insurances](https://catalogs.platform.bbva.com/apicatalog/business/apis/apis-insurances-insurances/versions/global-1.23.0/resources/insurancesapiquotationsquotationidinstallmentsplanssimulatev1/)
   - SMC del Servicio ASO: [Documento](https://docs.google.com/spreadsheets/d/1-HfiN65vmcMU6GOtIbQv45XQH-hVpTYx4dg-bZBHOu0/edit#gid=1587295576)
   - Usuario Transaccional: ZG13001
   - Version: 01-PE
   - Respuestas:
     - Código de respuesta: Http Code: 200, Severity: OK
-    - Código de Respuesta: Http Code: 400, Severity: ENR
+    - Código de Respuesta: Severity: ENR
 
 ## 2. DTOs:
 
@@ -25,7 +25,6 @@
   - amazon:
     - **SignatureAWS**: Entidad SignatureAWS
   - bo:
-    - **FinanciamientoPayloadBO**: 
     - financing:
       - **FinancingPlanBO**: Entidad FinancingPlan - Rimac
       - **CronogramaPagoBO**: Entidad CronogramaPago - Rimac
@@ -53,9 +52,9 @@
 > EL uso de la Librería PISDR020 está orientado a consumir el servicio de generación coronograma de pagos y
 >  y el servicio calculo de cuotas, ambos de Rimac.
 
-- **Método executeQuoteSchedule (FinancingPlanBO input, String traceId)**: Método para obtener el calendario de cuotas que genera Rimac
+- **Método FinancingPlanBO executeQuoteSchedule (FinancingPlanBO request, String traceId, String productId, String quotationId)**: Método para obtener el calendario de cuotas que genera Rimac
   - Avisos a retornar: PISD00120027
-- **Método executePaymentSchedule(FinancingPlanBO input, String quotationId, String traceId)**: Método para obtener el cronograma de pago generado por Rimac
+- **Método CronogramaPagoBO executePaymentSchedule (FinancingPlanBO request, String quotationId, String traceId, String productId)**: Método para obtener el cronograma de pago generado por Rimac
   - Avisos a retornar: PISD00120031
 
 #### 3.1.2. Libreria PISDR030
@@ -92,4 +91,4 @@
 
 - **Versión 0.5.1**: Esta versión le permite obtener los datos de financiamiento a partir de servicios de Rimac.
 - **Versión 0.5.3**: Se efectúa un ajuste para devolver como salida de la Api el dato PrimaBruta del servicio Rimac generarCronogramaPago.
-- **Versión 0.6.1**: Esta versión permite manejar una bifurcación a la hora de consumir servicios de Rimac, lo que permitirá manejar uri's diferentes según el tipo de producto especificado.
+- **Versión 0.6.2**: Esta versión permite manejar una bifurcación a la hora de consumir servicios de Rimac, lo que permitirá manejar uri's diferentes según el tipo de producto especificado.
