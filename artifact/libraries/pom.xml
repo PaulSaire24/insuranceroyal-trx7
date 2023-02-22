@@ -4,12 +4,12 @@
 	<parent>
 		<artifactId>insuranceroyal-trx7</artifactId>
 		<groupId>com.bbva.pisd</groupId>
-		<version>0.6.4</version>
+		<version>0.6.5</version>
 		<relativePath>../../</relativePath>
 	</parent>
 	<groupId>com.bbva.pisd</groupId>
 	<artifactId>LIBRARIES-insuranceroyal-trx7</artifactId>
-	<version>0.6.4</version>
+	<version>0.6.5</version>
 	<packaging>pom</packaging>
 	<name>LIBRARIES-insuranceroyal-trx7</name>
 	<modules>
