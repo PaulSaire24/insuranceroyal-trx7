@@ -155,10 +155,12 @@ public class PISDR030Impl extends PISDR030Abstract {
 	}
 
 	private Map<String, Object> mapInUpdateInsuranceQuotationModAmount(FinancingPlanDTO input, FinancingPlanDTO financingPlanDTO, String productId, String modalityType) {
+		String frequency = StringUtils.defaultString(this.applicationConfigurationService.getProperty(financingPlanDTO.getInstallmentPlans().get(0).getPeriod().getId()));
+
 		Map<String, Object> arguments = new HashMap<>();
 		arguments.put(PISDProperties.FIELD_PREMIUM_AMOUNT.getValue(), financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().getAmount());
 		arguments.put(PISDProperties.FIELD_PREMIUM_CURRENCY_ID.getValue(), financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().getCurrency());
-		arguments.put(PISDProperties.FIELD_POLICY_PAYMENT_FREQUENCY_TYPE.getValue(), financingPlanDTO.getInstallmentPlans().get(0).getPeriod().getId());
+		arguments.put(PISDProperties.FIELD_POLICY_PAYMENT_FREQUENCY_TYPE.getValue(), frequency);
 		arguments.put(PISDProperties.FIELD_USER_AUDIT_ID.getValue(), input.getUserAudit());
 		arguments.put(PISDProperties.FIELD_POLICY_QUOTA_INTERNAL_ID.getValue(), input.getQuotationId());
 		arguments.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_PRODUCT_ID.getValue(), productId);

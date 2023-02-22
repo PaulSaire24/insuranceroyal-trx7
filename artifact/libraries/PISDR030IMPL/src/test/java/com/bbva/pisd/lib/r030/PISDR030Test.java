@@ -4,9 +4,14 @@ import com.bbva.elara.configuration.manager.application.ApplicationConfiguration
 import com.bbva.elara.domain.transaction.Context;
 import com.bbva.elara.domain.transaction.ThreadContext;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
+import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoBO;
+import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
+import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
+import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
+import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.lib.r012.PISDR012;
 import com.bbva.pisd.lib.r020.PISDR020;
@@ -22,8 +27,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
@@ -174,5 +181,45 @@ public class PISDR030Test {
 		financingPlanDTO.getInstallmentPlans().get(0).getPeriod().setId("");
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 		assertNull(validation);
+	}
+
+	@Test
+	public void executeUpdateQuotationAmountOK() {
+		LOGGER.info("PISDR030Test Executing executeUpdateQuotationAmountOK ...");
+		Map<String, Object> responseExecuteRegisterAdditionalCompanyQuotaId = new HashMap<>();
+		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue(), "833");
+		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), "07");
+		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue(), "12345678");
+
+		FinancingPlanBO response = new FinancingPlanBO();
+		response.setPayload(new FinanciamientoPayloadBO());
+		response.getPayload().setFechaInicio(new LocalDate());
+		response.getPayload().setFechaFin(new LocalDate());
+		response.getPayload().setFinanciamiento(new ArrayList<>());
+		response.getPayload().getFinanciamiento().add(new FinanciamientoBO());
+		response.getPayload().getFinanciamiento().get(0).setMontoCuota(BigDecimal.TEN);
+		response.getPayload().getFinanciamiento().get(0).setMoneda("USD");
+		response.getPayload().getFinanciamiento().get(0).setDescripcionPeriodo("");
+		response.getPayload().getFinanciamiento().get(0).setNumeroCuotasTotales(12L);
+
+		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+		financingPlanDTO.setQuotationId("12345678");
+		financingPlanDTO.setInstallmentPlans(new ArrayList<>());
+		financingPlanDTO.getInstallmentPlans().add(new InstallmentsDTO());
+		financingPlanDTO.getInstallmentPlans().get(0).setPeriod(new PaymentPeriodDTO());
+		financingPlanDTO.getInstallmentPlans().get(0).getPeriod().setId("MONTHLY");
+		financingPlanDTO.getInstallmentPlans().get(0).setPaymentAmount(new PaymentAmountDTO());
+		financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().setAmount(10.00);
+		financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().setCurrency("USD");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseExecuteRegisterAdditionalCompanyQuotaId);
+		when(pisdr020.executeQuoteSchedule(anyObject(), anyString(), anyString(), anyString())).thenReturn(response);
+		when(mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(anyObject())).thenReturn(financingPlanDTO);
+		when(applicationConfigurationService.getProperty("update.quotation.amount.833.")).thenReturn("true");
+		when(applicationConfigurationService.getProperty("MONTHLY")).thenReturn("M");
+		when(pisdr012.executeUpdateInsuranceQuotationModAmount(anyMap())).thenReturn(1);
+
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
+		assertNotNull(validation);
 	}
 }
