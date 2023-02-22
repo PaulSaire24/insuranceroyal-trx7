@@ -63,7 +63,7 @@ public class PISDR030Test {
 		applicationConfigurationService = mock(ApplicationConfigurationService.class);
 
 		when(applicationConfigurationService.getProperty("ARRAY_PERIOD")).thenReturn("ANNUAL,BIMONTHLY,MONTHLY,SEMIANNUAL,QUARTERLY");
-
+		when(applicationConfigurationService.getProperty("update.quotation.amount..")).thenReturn("false");
 		pisdr030.setApplicationConfigurationService(applicationConfigurationService);
 
 		mapperHelper = mock(MapperHelper.class);

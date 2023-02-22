@@ -9,11 +9,15 @@ import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.dto.insurance.utils.PISDValidation;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -49,9 +53,9 @@ public class PISDR030Impl extends PISDR030Abstract {
 			QuotDetailDAO quotationDetails = validateGetInsuranceQuotation(responseQueryGetQuotationService);
 
 			LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan | isStartDateValid *****");
-
-			response = isStartDateValid(input,quotationDetails, (String) responseQueryGetQuotationService.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue()));
-
+			String productType = (String) responseQueryGetQuotationService.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue());
+			String modalityType = (String) responseQueryGetQuotationService.get(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue());
+			response = isStartDateValid(input, quotationDetails, productType, modalityType);
 		}
 
 		catch (BusinessException ex) {
@@ -92,7 +96,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 		return this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(input, responseRimac);
 	}
 
-	public FinancingPlanDTO isStartDateValid(FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId) {
+	public FinancingPlanDTO isStartDateValid(FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId, String modalityType) {
 		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
 		LocalDate date = new LocalDate();
 		if (Objects.isNull(input.getStartDate())) {
@@ -104,6 +108,14 @@ public class PISDR030Impl extends PISDR030Abstract {
 			financingPlanDTO = null;
 			this.addAdvice(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE.getAdviceCode());
 			throw PISDValidation.build(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE);
+		}
+		LOGGER.info("***** PISDR030Impl - isStartDateValid - property: {}", "cancellation.request.".concat(StringUtils.defaultString(productId)));
+		boolean isUpdateQuotationAmount = BooleanUtils.toBoolean(this.applicationConfigurationService.getProperty("update.quotation.amount.".concat(StringUtils.defaultString(productId)).concat(".").concat(StringUtils.defaultString(input.getSaleChannelId()))));
+		LOGGER.info("***** PISDR030Impl - isStartDateValid - isUpdateQuotationAmount: {}", isUpdateQuotationAmount);
+		if (isUpdateQuotationAmount && input.getInstallmentPlans().size() == 1) {
+			Map<String, Object> argumentsForUpdateInsuranceQuotationModAmount = mapInUpdateInsuranceQuotationModAmount(input, productId, modalityType);
+			LOGGER.info("***** PISDR030Impl - isStartDateValid - argumentsForUpdateInsuranceQuotationModAmount: {}", argumentsForUpdateInsuranceQuotationModAmount);
+			this.pisdR012.executeUpdateInsuranceQuotationModAmount(argumentsForUpdateInsuranceQuotationModAmount);
 		}
 		return financingPlanDTO;
 	}
@@ -137,5 +149,17 @@ public class PISDR030Impl extends PISDR030Abstract {
 			this.addAdvice(PISDErrors.ERROR_NOT_PERIOD_VALIDATE.getAdviceCode());
 			throw PISDValidation.build(PISDErrors.ERROR_NOT_PERIOD_VALIDATE);
 		}
+	}
+
+	private Map<String, Object> mapInUpdateInsuranceQuotationModAmount(FinancingPlanDTO input, String productId, String modalityType) {
+		Map<String, Object> arguments = new HashMap<>();
+		arguments.put(PISDProperties.FIELD_PREMIUM_AMOUNT.getValue(), input.getInstallmentPlans().get(0).getPaymentAmount().getAmount());
+		arguments.put(PISDProperties.FIELD_PREMIUM_CURRENCY_ID.getValue(), input.getInstallmentPlans().get(0).getPaymentAmount().getCurrency());
+		arguments.put(PISDProperties.FIELD_POLICY_PAYMENT_FREQUENCY_TYPE.getValue(), input.getInstallmentPlans().get(0).getPeriod().getId());
+		arguments.put(PISDProperties.FIELD_USER_AUDIT_ID.getValue(), input.getUserAudit());
+		arguments.put(PISDProperties.FIELD_POLICY_QUOTA_INTERNAL_ID.getValue(), input.getQuotationId());
+		arguments.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_PRODUCT_ID.getValue(), productId);
+		arguments.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), modalityType);
+		return arguments;
 	}
 }
