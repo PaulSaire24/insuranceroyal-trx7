@@ -109,11 +109,12 @@ public class PISDR030Impl extends PISDR030Abstract {
 			this.addAdvice(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE.getAdviceCode());
 			throw PISDValidation.build(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE);
 		}
+		LOGGER.info("***** PISDR030Impl - isStartDateValid - financingPlanDTO: {}", financingPlanDTO);
 		LOGGER.info("***** PISDR030Impl - isStartDateValid - property: {}", "update.quotation.amount.".concat(StringUtils.defaultString(productId)).concat(StringUtils.defaultString(input.getSaleChannelId()).toLowerCase()));
 		boolean isUpdateQuotationAmount = BooleanUtils.toBoolean(this.applicationConfigurationService.getProperty("update.quotation.amount.".concat(StringUtils.defaultString(productId)).concat(".").concat(StringUtils.defaultString(input.getSaleChannelId()).toLowerCase())));
 		LOGGER.info("***** PISDR030Impl - isStartDateValid - isUpdateQuotationAmount: {}", isUpdateQuotationAmount);
 		if (isUpdateQuotationAmount && input.getInstallmentPlans().size() == 1) {
-			Map<String, Object> argumentsForUpdateInsuranceQuotationModAmount = mapInUpdateInsuranceQuotationModAmount(input, productId, modalityType);
+			Map<String, Object> argumentsForUpdateInsuranceQuotationModAmount = mapInUpdateInsuranceQuotationModAmount(input, financingPlanDTO, productId, modalityType);
 			LOGGER.info("***** PISDR030Impl - isStartDateValid - argumentsForUpdateInsuranceQuotationModAmount: {}", argumentsForUpdateInsuranceQuotationModAmount);
 			this.pisdR012.executeUpdateInsuranceQuotationModAmount(argumentsForUpdateInsuranceQuotationModAmount);
 		}
@@ -151,11 +152,11 @@ public class PISDR030Impl extends PISDR030Abstract {
 		}
 	}
 
-	private Map<String, Object> mapInUpdateInsuranceQuotationModAmount(FinancingPlanDTO input, String productId, String modalityType) {
+	private Map<String, Object> mapInUpdateInsuranceQuotationModAmount(FinancingPlanDTO input, FinancingPlanDTO financingPlanDTO, String productId, String modalityType) {
 		Map<String, Object> arguments = new HashMap<>();
-		arguments.put(PISDProperties.FIELD_PREMIUM_AMOUNT.getValue(), input.getInstallmentPlans().get(0).getPaymentAmount().getAmount());
-		arguments.put(PISDProperties.FIELD_PREMIUM_CURRENCY_ID.getValue(), input.getInstallmentPlans().get(0).getPaymentAmount().getCurrency());
-		arguments.put(PISDProperties.FIELD_POLICY_PAYMENT_FREQUENCY_TYPE.getValue(), input.getInstallmentPlans().get(0).getPeriod().getId());
+		arguments.put(PISDProperties.FIELD_PREMIUM_AMOUNT.getValue(), financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().getAmount());
+		arguments.put(PISDProperties.FIELD_PREMIUM_CURRENCY_ID.getValue(), financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().getCurrency());
+		arguments.put(PISDProperties.FIELD_POLICY_PAYMENT_FREQUENCY_TYPE.getValue(), financingPlanDTO.getInstallmentPlans().get(0).getPeriod().getId());
 		arguments.put(PISDProperties.FIELD_USER_AUDIT_ID.getValue(), input.getUserAudit());
 		arguments.put(PISDProperties.FIELD_POLICY_QUOTA_INTERNAL_ID.getValue(), input.getQuotationId());
 		arguments.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_PRODUCT_ID.getValue(), productId);
