@@ -109,14 +109,16 @@ public class PISDR030Impl extends PISDR030Abstract {
 			this.addAdvice(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE.getAdviceCode());
 			throw PISDValidation.build(PISDErrors.ERROR_SCHEDULE_QUOTE_STARTDATE);
 		}
-		LOGGER.info("***** PISDR030Impl - isStartDateValid - financingPlanDTO: {}", financingPlanDTO);
-		LOGGER.info("***** PISDR030Impl - isStartDateValid - property: {}", "update.quotation.amount.".concat(StringUtils.defaultString(productId)).concat(StringUtils.defaultString(input.getSaleChannelId()).toLowerCase()));
-		boolean isUpdateQuotationAmount = BooleanUtils.toBoolean(this.applicationConfigurationService.getProperty("update.quotation.amount.".concat(StringUtils.defaultString(productId)).concat(".").concat(StringUtils.defaultString(input.getSaleChannelId()).toLowerCase())));
-		LOGGER.info("***** PISDR030Impl - isStartDateValid - isUpdateQuotationAmount: {}", isUpdateQuotationAmount);
-		if (isUpdateQuotationAmount && input.getInstallmentPlans().size() == 1) {
-			Map<String, Object> argumentsForUpdateInsuranceQuotationModAmount = mapInUpdateInsuranceQuotationModAmount(input, financingPlanDTO, productId, modalityType);
-			LOGGER.info("***** PISDR030Impl - isStartDateValid - argumentsForUpdateInsuranceQuotationModAmount: {}", argumentsForUpdateInsuranceQuotationModAmount);
-			this.pisdR012.executeUpdateInsuranceQuotationModAmount(argumentsForUpdateInsuranceQuotationModAmount);
+		if (financingPlanDTO != null) {
+			LOGGER.info("***** PISDR030Impl - isStartDateValid - financingPlanDTO: {}", financingPlanDTO);
+			LOGGER.info("***** PISDR030Impl - isStartDateValid - property: {}", "update.quotation.amount.".concat(StringUtils.defaultString(productId)).concat(StringUtils.defaultString(input.getSaleChannelId()).toLowerCase()));
+			boolean isUpdateQuotationAmount = BooleanUtils.toBoolean(this.applicationConfigurationService.getProperty("update.quotation.amount.".concat(StringUtils.defaultString(productId)).concat(".").concat(StringUtils.defaultString(input.getSaleChannelId()).toLowerCase())));
+			LOGGER.info("***** PISDR030Impl - isStartDateValid - isUpdateQuotationAmount: {}", isUpdateQuotationAmount);
+			if (isUpdateQuotationAmount && input.getInstallmentPlans().size() == 1) {
+				Map<String, Object> argumentsForUpdateInsuranceQuotationModAmount = mapInUpdateInsuranceQuotationModAmount(input, financingPlanDTO, productId, modalityType);
+				LOGGER.info("***** PISDR030Impl - isStartDateValid - argumentsForUpdateInsuranceQuotationModAmount: {}", argumentsForUpdateInsuranceQuotationModAmount);
+				this.pisdR012.executeUpdateInsuranceQuotationModAmount(argumentsForUpdateInsuranceQuotationModAmount);
+			}
 		}
 		return financingPlanDTO;
 	}
