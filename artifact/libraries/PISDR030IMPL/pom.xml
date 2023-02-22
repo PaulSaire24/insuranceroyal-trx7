@@ -68,11 +68,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
@@ -91,7 +86,7 @@
 		<dependency>
 			<groupId>com.bbva.pisd</groupId>
 			<artifactId>PISDR012</artifactId>
-			<version>0.23.1</version>
+			<version>0.25.11</version>
 		</dependency>
 		<dependency>
 			<groupId>com.bbva.pisd</groupId>
