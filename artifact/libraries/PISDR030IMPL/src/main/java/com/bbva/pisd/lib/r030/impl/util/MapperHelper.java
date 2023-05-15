@@ -10,6 +10,7 @@ import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
+import com.bbva.pisd.dto.insurance.utils.PISDConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
@@ -22,6 +23,19 @@ public class MapperHelper {
     private final String CUOTA = "CUOTA";
 
     protected ApplicationConfigurationService applicationConfigurationService;
+
+    public FinancingPlanBO createRequestQuoteScheduleRimacLife (FinancingPlanDTO financingPlanDTO) {
+        FinancingPlanBO requestRimac = new FinancingPlanBO();
+        FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
+
+        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamiento(installment)).collect(Collectors.toList());
+
+        financiamientoPayloadBO.setFinanciamiento(financiamiento);
+        financiamientoPayloadBO.setProducto(PISDConstants.ProductEasyYesLife.EASY_YES_RIMAC);
+
+        requestRimac.setPayload(financiamientoPayloadBO);
+        return requestRimac;
+    }
 
     public FinancingPlanBO createRequestQuoteScheduleRimac (FinancingPlanDTO financingPlanDTO, QuotDetailDAO quotDetailDAO) {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
