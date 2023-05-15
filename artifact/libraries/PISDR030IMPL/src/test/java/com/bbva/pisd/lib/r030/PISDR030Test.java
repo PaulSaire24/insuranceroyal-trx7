@@ -131,6 +131,25 @@ public class PISDR030Test {
 	}
 
 	@Test
+	public void executeQuoteScheduleWithResponseVida() throws IOException {
+		LOGGER.info("PISDR030Test Executing executeQuoteScheduleWithResponse ...");
+		Map<String, Object> responseQueryGetQuotationService1;
+		responseQueryGetQuotationService1 = mock(Map.class);
+
+		when(responseQueryGetQuotationService1.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue())).thenReturn("9a64a5ed-509f-4baa-88e3-a0e373b49e65");
+		when(responseQueryGetQuotationService1.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue())).thenReturn("840");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService1);
+
+		FinancingPlanBO response = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
+
+		when(pisdr020.executeQuoteSchedule(anyObject(), anyString(), anyString(), anyString())).thenReturn(response);
+
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+		assertNull(validation);
+	}
+
+	@Test
 	public void executePaymentSchedule() throws IOException {
 		LOGGER.info("PISDR030Test Executing executePaymentSchedule ...");
 
