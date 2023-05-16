@@ -95,16 +95,6 @@ public class MapperHelper {
         return response;
     }
 
-    public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanVidaResponseValues(FinancingPlanBO responseRimac) {
-        FinancingPlanDTO response = new FinancingPlanDTO();
-        response.setStartDate(responseRimac.getPayload().getFechaInicio());
-
-        response.setMaturityDate(responseRimac.getPayload().getFechaInicio());
-        List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().getFinanciamiento().stream().map(financiamiento -> createInstallment(financiamiento)).collect(Collectors.toList());
-        response.setInstallmentPlans(installmentsDTOS);
-        return response;
-    }
-
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanDTO request, CronogramaPagoBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();
         DateTimeZone dateTimeZone = DateTimeZone.forID("GMT");
