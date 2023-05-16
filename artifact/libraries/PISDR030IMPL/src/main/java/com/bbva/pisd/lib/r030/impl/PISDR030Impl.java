@@ -86,7 +86,9 @@ public class PISDR030Impl extends PISDR030Abstract {
 			LOGGER.info("***** PISDR030Impl - validate validateSimulateInsuranceQuotationInstallmentPlanResponse -> Response NULL *****");
 			return null;
 		}
-		return this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(responseRimac);
+		return productId.equalsIgnoreCase(PISDConstants.ProductEasyYesLife.EASY_YES_PRODUCT_CODE) ?
+				this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanVidaResponseValues(responseRimac) :
+				this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(responseRimac);
 	}
 
 	private FinancingPlanDTO executePaymentSchedule (FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId) {

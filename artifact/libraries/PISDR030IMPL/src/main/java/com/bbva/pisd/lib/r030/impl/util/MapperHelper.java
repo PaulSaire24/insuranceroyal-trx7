@@ -89,7 +89,17 @@ public class MapperHelper {
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();
         response.setStartDate(responseRimac.getPayload().getFechaInicio());
-        response.setMaturityDate(Objects.nonNull(responseRimac.getPayload().getFechaFin()) ? responseRimac.getPayload().getFechaFin() : null);
+        response.setMaturityDate(responseRimac.getPayload().getFechaFin());
+        List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().getFinanciamiento().stream().map(financiamiento -> createInstallment(financiamiento)).collect(Collectors.toList());
+        response.setInstallmentPlans(installmentsDTOS);
+        return response;
+    }
+
+    public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanVidaResponseValues(FinancingPlanBO responseRimac) {
+        FinancingPlanDTO response = new FinancingPlanDTO();
+        response.setStartDate(responseRimac.getPayload().getFechaInicio());
+
+        response.setMaturityDate(responseRimac.getPayload().getFechaInicio());
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().getFinanciamiento().stream().map(financiamiento -> createInstallment(financiamiento)).collect(Collectors.toList());
         response.setInstallmentPlans(installmentsDTOS);
         return response;
