@@ -10,10 +10,12 @@ import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
+import com.bbva.pisd.dto.insurance.utils.PISDConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MapperHelper {
@@ -22,6 +24,19 @@ public class MapperHelper {
     private final String CUOTA = "CUOTA";
 
     protected ApplicationConfigurationService applicationConfigurationService;
+
+    public FinancingPlanBO createRequestQuoteScheduleRimacLife (FinancingPlanDTO financingPlanDTO) {
+        FinancingPlanBO requestRimac = new FinancingPlanBO();
+        FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
+
+        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamientoLife(installment)).collect(Collectors.toList());
+
+        financiamientoPayloadBO.setFinanciamiento(financiamiento);
+        financiamientoPayloadBO.setProducto(PISDConstants.ProductEasyYesLife.EASY_YES_RIMAC);
+
+        requestRimac.setPayload(financiamientoPayloadBO);
+        return requestRimac;
+    }
 
     public FinancingPlanBO createRequestQuoteScheduleRimac (FinancingPlanDTO financingPlanDTO, QuotDetailDAO quotDetailDAO) {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
@@ -61,6 +76,16 @@ public class MapperHelper {
         financiamientoBO.setNroCuotas(Long.parseLong(nroCuotas));
         return financiamientoBO;
     }
+
+    private FinanciamientoBO createCuotaFinanciamientoLife (InstallmentsDTO installmentsDTO) {
+        FinanciamientoBO financiamientoBO = new FinanciamientoBO();
+        String periodoId =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
+        String nroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
+        financiamientoBO.setPeriodo(periodoId);
+        financiamientoBO.setNumeroCuotas(Long.parseLong(nroCuotas));
+        return financiamientoBO;
+    }
+
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();
         response.setStartDate(responseRimac.getPayload().getFechaInicio());

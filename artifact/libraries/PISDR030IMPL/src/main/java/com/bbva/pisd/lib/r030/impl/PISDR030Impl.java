@@ -6,6 +6,7 @@ import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
+import com.bbva.pisd.dto.insurance.utils.PISDConstants;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.dto.insurance.utils.PISDValidation;
@@ -69,7 +70,14 @@ public class PISDR030Impl extends PISDR030Abstract {
 	private FinancingPlanDTO executeQuoteSchedule (FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId) {
 
 		LOGGER.info("***** PISDR030Impl - executeQuoteSchedule *****");
-		FinancingPlanBO requestRimac = this.mapperHelper.createRequestQuoteScheduleRimac(input, quotationDetails);
+
+		FinancingPlanBO requestRimac = new FinancingPlanBO();
+		if(productId.equalsIgnoreCase(PISDConstants.ProductEasyYesLife.EASY_YES_PRODUCT_CODE)) {
+			requestRimac = this.mapperHelper.createRequestQuoteScheduleRimacLife(input);
+		} else {
+			requestRimac = this.mapperHelper.createRequestQuoteScheduleRimac(input, quotationDetails);
+		}
+
 		FinancingPlanBO responseRimac = this.pisdR020.executeQuoteSchedule(requestRimac, input.getTraceId(), productId, quotationDetails.getRimacId());
 		LOGGER.info("***** PISDR030Impl - validate SimulateInsuranceQuotationInstallmentPlan Service response *****");
 		try {

@@ -77,6 +77,14 @@ public class MapperHelperTest {
     }
 
     @Test
+    public void createQuoteScheduleRequestRimacLife() throws IOException{
+        FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
+
+        FinancingPlanBO requestRimac = mapperHelper.createRequestQuoteScheduleRimacLife(request);
+        assertNotNull(requestRimac.getPayload());
+    }
+
+    @Test
     public void createQuoteScheduleRequestRimac() throws IOException{
         FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
         QuotDetailDAO quotDetailDAO = new QuotDetailDAO();
