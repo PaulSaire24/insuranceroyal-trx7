@@ -28,7 +28,7 @@ public class MapperHelper {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
         FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
 
-        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamiento(installment)).collect(Collectors.toList());
+        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamientoLife(installment)).collect(Collectors.toList());
 
         financiamientoPayloadBO.setFinanciamiento(financiamiento);
         financiamientoPayloadBO.setProducto(PISDConstants.ProductEasyYesLife.EASY_YES_RIMAC);
@@ -75,6 +75,16 @@ public class MapperHelper {
         financiamientoBO.setNroCuotas(Long.parseLong(nroCuotas));
         return financiamientoBO;
     }
+
+    private FinanciamientoBO createCuotaFinanciamientoLife (InstallmentsDTO installmentsDTO) {
+        FinanciamientoBO financiamientoBO = new FinanciamientoBO();
+        String periodoId =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
+        String nroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
+        financiamientoBO.setPeriodo(periodoId);
+        financiamientoBO.setNumeroCuotas(Long.parseLong(nroCuotas));
+        return financiamientoBO;
+    }
+
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();
         response.setStartDate(responseRimac.getPayload().getFechaInicio());
