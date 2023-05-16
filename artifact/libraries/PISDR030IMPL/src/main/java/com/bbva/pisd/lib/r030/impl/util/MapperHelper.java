@@ -15,6 +15,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MapperHelper {
@@ -88,7 +89,7 @@ public class MapperHelper {
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();
         response.setStartDate(responseRimac.getPayload().getFechaInicio());
-        response.setMaturityDate(responseRimac.getPayload().getFechaFin());
+        response.setMaturityDate(Objects.nonNull(responseRimac.getPayload().getFechaFin()) ? responseRimac.getPayload().getFechaFin() : null);
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().getFinanciamiento().stream().map(financiamiento -> createInstallment(financiamiento)).collect(Collectors.toList());
         response.setInstallmentPlans(installmentsDTOS);
         return response;
