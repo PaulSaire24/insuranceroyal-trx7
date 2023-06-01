@@ -3,6 +3,8 @@ package com.bbva.pisd.lib.r030.impl;
 import com.bbva.apx.exception.business.BusinessException;
 import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoLifeBO;
+import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
@@ -92,6 +94,11 @@ public class PISDR030Impl extends PISDR030Abstract {
 	private FinancingPlanDTO executePaymentSchedule (FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId) {
 
 		LOGGER.info("***** PISDR030Impl - executePaymentSchedule *****");
+
+		if(productId.equalsIgnoreCase(PISDConstants.ProductEasyYesLife.EASY_YES_PRODUCT_CODE)) {
+			return getFinancingPlanLifeEasyYes(input, quotationDetails, productId);
+		}
+
 		FinancingPlanBO requestRimac = this.mapperHelper.createRequestPaymentScheduleRimac(input);
 		CronogramaPagoBO responseRimac = this.pisdR020.executePaymentSchedule(requestRimac, quotationDetails.getRimacId(), input.getTraceId(), productId);
 		LOGGER.info("***** PISDR030Impl - validate SimulateInsuranceQuotationInstallmentPlan Service response *****");
@@ -102,6 +109,23 @@ public class PISDR030Impl extends PISDR030Abstract {
 			return null;
 		}
 		return this.mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(input, responseRimac);
+	}
+
+	private FinancingPlanDTO getFinancingPlanLifeEasyYes(FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId) {
+		FinancingPlanBO requestRimac = this.mapperHelper.createRequestPaymentScheduleRimacLifeEasyYes(input);
+		LOGGER.info("***** PISDR030Impl - getFinancingPlanLifeEasyYes | requestRimac {} *****",requestRimac);
+
+		CronogramaPagoLifeBO responseRimac = this.pisdR020.executePaymentScheduleLife(requestRimac, quotationDetails.getRimacId(), productId, input.getTraceId());
+		LOGGER.info("***** PISDR030Impl - getFinancingPlanLifeEasyYes | responseRimac {} *****",responseRimac);
+
+		try{
+			validateResponseExecutePaymentScheduleLife(responseRimac);
+		}catch (BusinessException ex) {
+			LOGGER.info("***** PISDR030Impl - validate validateResponseExecutePaymentScheduleLife -> Response NULL - exception {} *****",ex.getMessage());
+			return null;
+		}
+
+		return this.mapperHelper.mapSimulatePaymentScheduleLifeEasyYesResponse(input, responseRimac);
 	}
 
 	public FinancingPlanDTO isStartDateValid(FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId, String modalityType) {
@@ -134,6 +158,12 @@ public class PISDR030Impl extends PISDR030Abstract {
 	private void validateSimulateInsuranceQuotationInstallmentPlanResponse(FinancingPlanBO responseRimac) {
 		if(Objects.isNull(responseRimac)) {
 			throw PISDValidation.build(PISDErrors.ERROR_CONNECTION_SCHEDULE_QUOTE_RIMAC_SERVICE);
+		}
+	}
+
+	private void validateResponseExecutePaymentScheduleLife(CronogramaPagoLifeBO responseRimac) {
+		if(Objects.isNull(responseRimac)) {
+			throw PISDValidation.build(PISDErrors.ERROR_CONNECTION_PAYMENT_SCHEDULE_RIMAC_SERVICE);
 		}
 	}
 

@@ -22,8 +22,6 @@ public class PISDT00701PETransaction extends AbstractPISDT00701PETransaction {
 	
 	@Override
 	public void execute() {
-
-
 		LOGGER.info("PISDT00701PETransaction START");
 
 		LOGGER.info("Cabecera traceId: {}", this.getRequestHeader().getHeaderParameter(RequestHeaderParamsName.REQUESTID));

@@ -6,6 +6,7 @@ import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoLifeBO;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
@@ -14,6 +15,7 @@ import com.bbva.pisd.dto.insurance.utils.PISDConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -58,6 +60,17 @@ public class MapperHelper {
         return requestRimac;
     }
 
+    public FinancingPlanBO createRequestPaymentScheduleRimacLifeEasyYes(FinancingPlanDTO financingPlanDTO) {
+        FinancingPlanBO requestRimac = new FinancingPlanBO();
+        FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
+        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCronogramaFinanciamientoLife(installment)).collect(Collectors.toList());
+
+        financiamientoPayloadBO.setFinanciamiento(financiamiento);
+        financiamientoPayloadBO.setProducto(PISDConstants.ProductEasyYesLife.EASY_YES_RIMAC);
+        requestRimac.setPayload(financiamientoPayloadBO);
+        return requestRimac;
+    }
+
     private FinanciamientoBO createCuotaFinanciamiento (InstallmentsDTO installmentsDTO, FinancingPlanDTO financingPlanDTO) {
         FinanciamientoBO financiamientoBO = new FinanciamientoBO();
         String frecuencia =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
@@ -65,6 +78,15 @@ public class MapperHelper {
         financiamientoBO.setFrecuencia(frecuencia);
         financiamientoBO.setNumeroCuotas(Long.parseLong(numeroCuotas));
         financiamientoBO.setFechaInicio(financingPlanDTO.getStartDate());
+        return financiamientoBO;
+    }
+
+    private FinanciamientoBO createCronogramaFinanciamientoLife (InstallmentsDTO installmentsDTO) {
+        FinanciamientoBO financiamientoBO = new FinanciamientoBO();
+        String frecuencia =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
+        String numeroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
+        financiamientoBO.setFrecuencia(frecuencia);
+        financiamientoBO.setNumeroCuotas(Long.parseLong(numeroCuotas));
         return financiamientoBO;
     }
 
@@ -102,6 +124,33 @@ public class MapperHelper {
         response.setMaturityDate(new LocalDate(responseRimac.getPayload().get(0).getFechaFinal(), dateTimeZone));
         List<InstallmentsDTO> installmentsDTOS = responseRimac.getPayload().stream().map(cronogramaPago -> createInstallment(cronogramaPago, request)).collect(Collectors.toList());
         response.setInstallmentPlans(installmentsDTOS);
+        return response;
+    }
+
+    public FinancingPlanDTO mapSimulatePaymentScheduleLifeEasyYesResponse(FinancingPlanDTO request, CronogramaPagoLifeBO responseRimac) {
+        FinancingPlanDTO response = new FinancingPlanDTO();
+        DateTimeZone dateTimeZone = DateTimeZone.forID("GMT");
+
+        response.setStartDate(Objects.nonNull(responseRimac.getPayload().getFechaInicio()) ? new LocalDate(responseRimac.getPayload().getFechaInicio(),dateTimeZone) : new LocalDate(dateTimeZone));
+        response.setMaturityDate(Objects.nonNull(responseRimac.getPayload().getFechaFinal()) ? new LocalDate(responseRimac.getPayload().getFechaFinal(),dateTimeZone) : new LocalDate(dateTimeZone));
+        List<InstallmentsDTO> installmentsDTOS = new ArrayList<>();
+        InstallmentsDTO installmentsDTO = new InstallmentsDTO();
+
+        String totalNumberInstallments = this.applicationConfigurationService.getProperty(CUOTA + request.getInstallmentPlans().get(0).getPeriod().getId());
+        installmentsDTO.setTotalNumberInstallments(Long.parseLong(totalNumberInstallments));
+
+        PaymentPeriodDTO period = new PaymentPeriodDTO();
+        period.setId(request.getInstallmentPlans().get(0).getPeriod().getId());
+        installmentsDTO.setPeriod(period);
+
+        PaymentAmountDTO amount = new PaymentAmountDTO();
+        amount.setAmount(responseRimac.getPayload().getPrimaBruta().doubleValue());
+        amount.setCurrency("PEN");
+        installmentsDTO.setPaymentAmount(amount);
+
+        installmentsDTOS.add(installmentsDTO);
+        response.setInstallmentPlans(installmentsDTOS);
+
         return response;
     }
 
