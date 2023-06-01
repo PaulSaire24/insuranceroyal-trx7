@@ -4,7 +4,6 @@ import com.bbva.pisd.dto.insurance.amazon.SignatureAWS;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoLifeBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
-import com.bbva.pisd.dto.insurance.utils.PISDConstants;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.lib.r020.impl.util.JsonHelper;
 import org.slf4j.Logger;
@@ -31,6 +30,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PISDR020Impl.class);
 	private static final String AUTHORIZATION = "Authorization";
 	private static final String JSON_LOG = "JSON BODY TO SEND: {}";
+	private static final String PATH_PARAM_IDCOTIZACION = "idCotizacion";
 
 	@Override
 	public FinancingPlanBO executeQuoteSchedule (FinancingPlanBO input, String traceId, String productId, String quotationId) {
@@ -53,7 +53,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 
 		if(!productId.equals("830")){
 			pathParams = new HashMap<>();
-			pathParams.put("idCotizacion", quotationId);
+			pathParams.put(PATH_PARAM_IDCOTIZACION, quotationId);
 			enableVeh = false;
 		}
 
@@ -90,7 +90,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 		LOGGER.info(JSON_LOG, entity.getBody());
 
 		Map<String, Object> pathParams = new HashMap<>();
-		pathParams.put("idCotizacion", quotationId);
+		pathParams.put(PATH_PARAM_IDCOTIZACION, quotationId);
 
 		try {
 			output = this.externalApiConnector.postForObject(this.rimacUrlForker.generatePropertyKeyNamePaymentSchedule(productId), entity, CronogramaPagoBO.class, pathParams);
@@ -123,7 +123,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 
 		try {
 			ResponseEntity<CronogramaPagoLifeBO> response = this.externalApiConnector.exchange(this.rimacUrlForker.generatePropertyKeyNamePaymentSchedule(productId),
-					org.springframework.http.HttpMethod.PATCH, entity, CronogramaPagoLifeBO.class, singletonMap("idCotizacion",quotationId));
+					org.springframework.http.HttpMethod.PATCH, entity, CronogramaPagoLifeBO.class, singletonMap(PATH_PARAM_IDCOTIZACION,quotationId));
 			output = response.getBody();
 
 		} catch(RestClientException e) {

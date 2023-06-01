@@ -2,7 +2,11 @@ package com.bbva.pisd.lib.r030.impl.util;
 
 import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
-import com.bbva.pisd.dto.insurance.bo.financing.*;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
+import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoBO;
+import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
+import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoLifeBO;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
@@ -59,7 +63,7 @@ public class MapperHelper {
     public FinancingPlanBO createRequestPaymentScheduleRimacLifeEasyYes(FinancingPlanDTO financingPlanDTO) {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
         FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
-        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCronogramaFinanciamientoLife(installment, financingPlanDTO)).collect(Collectors.toList());
+        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCronogramaFinanciamientoLife(installment)).collect(Collectors.toList());
 
         financiamientoPayloadBO.setFinanciamiento(financiamiento);
         financiamientoPayloadBO.setProducto(PISDConstants.ProductEasyYesLife.EASY_YES_RIMAC);
@@ -77,7 +81,7 @@ public class MapperHelper {
         return financiamientoBO;
     }
 
-    private FinanciamientoBO createCronogramaFinanciamientoLife (InstallmentsDTO installmentsDTO, FinancingPlanDTO financingPlanDTO) {
+    private FinanciamientoBO createCronogramaFinanciamientoLife (InstallmentsDTO installmentsDTO) {
         FinanciamientoBO financiamientoBO = new FinanciamientoBO();
         String frecuencia =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
         String numeroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
