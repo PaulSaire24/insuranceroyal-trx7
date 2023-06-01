@@ -3,10 +3,7 @@ package com.bbva.pisd.lib.r030;
 import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.elara.domain.transaction.Context;
 import com.bbva.elara.domain.transaction.ThreadContext;
-import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
-import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoBO;
-import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
-import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
+import com.bbva.pisd.dto.insurance.bo.financing.*;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
@@ -21,6 +18,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.cglib.core.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -241,4 +239,77 @@ public class PISDR030Test {
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 		assertNotNull(validation);
 	}
+
+	private FinancingPlanDTO requestTrxMonthlyFrquency(){
+		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+
+		financingPlanDTO.setQuotationId("0814000042574");
+		financingPlanDTO.setStartDate(new LocalDate());
+		List<InstallmentsDTO> installmentsDTOList = new ArrayList<>();
+		InstallmentsDTO installmentsDTO = new InstallmentsDTO();
+		PaymentPeriodDTO paymentPeriodDTO = new PaymentPeriodDTO();
+		paymentPeriodDTO.setId("MONTHLY");
+		installmentsDTO.setPeriod(paymentPeriodDTO);
+		installmentsDTOList.add(installmentsDTO);
+		financingPlanDTO.setInstallmentPlans(installmentsDTOList);
+
+		return financingPlanDTO;
+	}
+
+	@Test
+	public void executePaymentScheduleLifeEasyYesOK() throws IOException {
+		LOGGER.info("PISDR030Test Executing executePaymentScheduleLifeEasyYes ...");
+
+		FinancingPlanDTO requestTrxMonthlyFrquency = this.requestTrxMonthlyFrquency();
+		CronogramaPagoLifeBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanCronogramaPagoResponseRimacLifeEasyYes();
+
+		Map<String, Object> responseQueryGetQuotationService = new HashMap<>();
+		responseQueryGetQuotationService.put(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue(), "840");
+		responseQueryGetQuotationService.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), "01");
+		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue(), "1f142c09-640d-4173-8a3d-6d2b24mf4e93");
+
+		FinancingPlanDTO responseSchedule = new FinancingPlanDTO();
+		responseSchedule.setStartDate(new LocalDate());
+		responseSchedule.setMaturityDate(new LocalDate());
+		responseSchedule.setInstallmentPlans(new ArrayList<>());
+		responseSchedule.getInstallmentPlans().add(new InstallmentsDTO());
+		responseSchedule.getInstallmentPlans().get(0).setPeriod(new PaymentPeriodDTO());
+		responseSchedule.getInstallmentPlans().get(0).getPeriod().setId("MONTHLY");
+		responseSchedule.getInstallmentPlans().get(0).setPaymentAmount(new PaymentAmountDTO());
+		responseSchedule.getInstallmentPlans().get(0).getPaymentAmount().setAmount(15.00);
+		responseSchedule.getInstallmentPlans().get(0).getPaymentAmount().setCurrency("PEN");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+		when(pisdr020.executePaymentScheduleLife(anyObject(), anyObject(), anyString(), anyString())).thenReturn(responseRimac);
+		when(mapperHelper.mapSimulatePaymentScheduleLifeEasyYesResponse(anyObject(),anyObject())).thenReturn(responseSchedule);
+		when(pisdr012.executeUpdateInsuranceQuotationModAmount(anyMap())).thenReturn(1);
+		when(applicationConfigurationService.getProperty("update.quotation.amount.840.")).thenReturn("true");
+
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(requestTrxMonthlyFrquency);
+
+		assertNotNull(validation);
+		assertNotNull(validation.getStartDate());
+		assertNotNull(validation.getMaturityDate());
+		assertNotNull(validation.getInstallmentPlans());
+	}
+
+	@Test
+	public void executePaymentScheduleLifeEasyYesWithPaymenScheduleLifeNull() throws IOException {
+		LOGGER.info("PISDR030Test Executing executePaymentScheduleLifeEasyYesWithPaymenScheduleLifeNull ...");
+
+		Map<String, Object> responseQueryGetQuotationService = new HashMap<>();
+		responseQueryGetQuotationService.put(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue(), "840");
+		responseQueryGetQuotationService.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), "01");
+		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue(), "1f142c09-640d-4173-8a3d-6d2b24mf4e93");
+
+		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+		when(pisdr020.executePaymentScheduleLife(anyObject(), anyObject(), anyString(), anyString())).thenReturn(null);
+
+		FinancingPlanDTO financingPlanDTO = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
+		financingPlanDTO.setStartDate(new LocalDate());
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
+		assertNull(validation);
+	}
+
+
 }

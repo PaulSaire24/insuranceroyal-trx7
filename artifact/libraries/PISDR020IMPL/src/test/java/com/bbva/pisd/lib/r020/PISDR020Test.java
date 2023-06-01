@@ -5,6 +5,7 @@ import com.bbva.elara.domain.transaction.ThreadContext;
 import com.bbva.elara.utility.api.connector.APIConnector;
 import com.bbva.pisd.dto.insurance.amazon.SignatureAWS;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoLifeBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.mock.MockDTO;
 import com.bbva.pisd.lib.r014.PISDR014;
@@ -17,11 +18,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
@@ -136,6 +141,31 @@ public class PISDR020Test {
 	}
 
 	@Test
+	public void executePaymentScheduleLifeEasyYesServiceOK() throws IOException {
+		LOGGER.info("PISDR020Test - Executing executePaymentScheduleLifeEasyYesServiceOK...");
+
+		CronogramaPagoLifeBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanCronogramaPagoResponseRimacLifeEasyYes();
+		when(this.rimacUrlForker.generateUriForSignatureAWSPaymentSchedule(anyString(),anyString())).thenReturn("/api-vida/V1/cotizaciones/58e46e2e-a49d-4943-a5df-db1913954b3d/cronogramapago-seleccionar");
+		when(this.rimacUrlForker.generatePropertyKeyNamePaymentSchedule(anyString())).thenReturn("paymentschedule.rimac.840");
+		when(this.externalApiConnector.exchange(anyString(), anyObject(),anyObject(), (Class<CronogramaPagoLifeBO>) any(), anyMap())).thenReturn(new ResponseEntity<>(responseRimac, HttpStatus.OK));
+
+		CronogramaPagoLifeBO validation = pisdr020.executePaymentScheduleLife(new FinancingPlanBO(), "1387232", "840",TRACE_ID);
+		assertNotNull(validation);
+		assertNotNull(validation.getPayload());
+		assertNotNull(validation.getPayload().getCotizacion());
+		assertNotNull(validation.getPayload().getPrimaNeta());
+		assertNotNull(validation.getPayload().getPrimaBruta());
+		assertNotNull(validation.getPayload().getFinanciamiento());
+		assertNotNull(validation.getPayload().getNumeroCuotas());
+		assertNotNull(validation.getPayload().getCuotasFinanciamiento());
+		assertNotNull(validation.getPayload().getCuotasFinanciamiento().get(0).getCuota());
+		assertNotNull(validation.getPayload().getCuotasFinanciamiento().get(0).getMontoCuota());
+		assertNotNull(validation.getPayload().getCuotasFinanciamiento().get(0).getFechaVencimiento());
+
+	}
+
+
+	@Test
 	public void executeQuoteScheduleWithRestClientException() {
 		LOGGER.info("PISDR020Test - Executing executeQuoteScheduleWithRestClientException...");
 
@@ -161,6 +191,21 @@ public class PISDR020Test {
 		when(this.rimacUrlForker.generatePropertyKeyNamePaymentSchedule(anyString())).
 		thenReturn("paymentschedule.rimac.830");
 		CronogramaPagoBO validation = pisdr020.executePaymentSchedule(new FinancingPlanBO(), "123123", TRACE_ID, "830");
+		assertNull(validation);
+	}
+
+	@Test
+	public void executePaymentScheduleLifeWithRestClientException() throws IOException{
+		LOGGER.info("PISDR020Test - Executing executePaymentScheduleLifeWithRestClientException...");
+
+		when(this.externalApiConnector.exchange(anyString(), anyObject(),anyObject(), (Class<CronogramaPagoLifeBO>) any(), anyMap()))
+				.thenThrow(new RestClientException(MESSAGE_EXCEPTION));
+		when(this.rimacUrlForker.generateUriForSignatureAWSPaymentSchedule(anyString(),anyString())).
+				thenReturn("/api-vida/V1/cotizaciones//api-vida/V1/cotizaciones/{idCotizacion}/cronogramapago-seleccionar/cronogramapago-seleccionar");
+		when(this.rimacUrlForker.generatePropertyKeyNamePaymentSchedule(anyString())).
+				thenReturn("paymentschedule.rimac.840");
+
+		CronogramaPagoLifeBO validation = pisdr020.executePaymentScheduleLife(new FinancingPlanBO(), "1231423", "830",TRACE_ID);
 		assertNull(validation);
 	}
 
