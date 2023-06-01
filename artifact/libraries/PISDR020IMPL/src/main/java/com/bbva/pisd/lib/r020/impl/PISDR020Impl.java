@@ -2,7 +2,9 @@ package com.bbva.pisd.lib.r020.impl;
 
 import com.bbva.pisd.dto.insurance.amazon.SignatureAWS;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
+import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoLifeBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
+import com.bbva.pisd.dto.insurance.utils.PISDConstants;
 import com.bbva.pisd.dto.insurance.utils.PISDErrors;
 import com.bbva.pisd.lib.r020.impl.util.JsonHelper;
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 
 import javax.ws.rs.HttpMethod;
@@ -17,6 +20,8 @@ import javax.ws.rs.HttpMethod;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Collections.singletonMap;
 
 /**
  * The  interface PISDR020Impl class...
@@ -79,7 +84,7 @@ public class PISDR020Impl extends PISDR020Abstract {
 		String requestJson = getRequestJson(input);
 
 		SignatureAWS signatureAWS = this.pisdR014.executeSignatureConstruction(requestJson, HttpMethod.POST,
-				this.rimacUrlForker.generateUriForSignatureAWSPaymentSchedule(productId, quotationId),null, traceId);
+					this.rimacUrlForker.generateUriForSignatureAWSPaymentSchedule(productId, quotationId),null, traceId);
 
 		HttpEntity<String> entity = new HttpEntity<>(requestJson, createHttpHeadersAWS(signatureAWS));
 		LOGGER.info(JSON_LOG, entity.getBody());
@@ -96,6 +101,38 @@ public class PISDR020Impl extends PISDR020Abstract {
 
 		LOGGER.info("***** PISDR020Impl - executePaymentSchedule ***** Response: {}", getRequestJson(output));
 		LOGGER.info("***** PISDR020Impl - executePaymentSchedule END *****");
+
+		return output;
+	}
+
+	@Override
+	public CronogramaPagoLifeBO executePaymentScheduleLife(FinancingPlanBO request, String quotationId, String productId, String traceId) {
+
+		LOGGER.info("***** PISDR020Impl - executePaymentScheduleLife START *****");
+		LOGGER.info("***** PISDR020Impl - executePaymentScheduleLife | request {} *****",request);
+		LOGGER.info("***** PISDR020Impl - executePaymentScheduleLife | quotationId {} *****",quotationId);
+
+		CronogramaPagoLifeBO output = null;
+		String requestJson = getRequestJson(request);
+
+		SignatureAWS signatureAWS = this.pisdR014.executeSignatureConstruction(requestJson, org.springframework.http.HttpMethod.PATCH.toString(),
+				this.rimacUrlForker.generateUriForSignatureAWSPaymentSchedule(productId, quotationId),null,traceId);
+
+		HttpEntity<String> entity = new HttpEntity<>(requestJson, createHttpHeadersAWS(signatureAWS));
+		LOGGER.info(JSON_LOG, entity.getBody());
+
+		try {
+			ResponseEntity<CronogramaPagoLifeBO> response = this.externalApiConnector.exchange(this.rimacUrlForker.generatePropertyKeyNamePaymentSchedule(productId),
+					org.springframework.http.HttpMethod.PATCH, entity, CronogramaPagoLifeBO.class, singletonMap("idCotizacion",quotationId));
+			output = response.getBody();
+
+		} catch(RestClientException e) {
+			LOGGER.info("***** PISDR020Impl - executePaymentScheduleLife ***** Exception: {}", e.getMessage());
+			this.addAdvice(PISDErrors.ERROR_CONNECTION_PAYMENT_SCHEDULE_RIMAC_SERVICE.getAdviceCode());
+		}
+
+		LOGGER.info("***** PISDR020Impl - executePaymentScheduleLife ***** Response: {}", getRequestJson(output));
+		LOGGER.info("***** PISDR020Impl - executePaymentScheduleLife END *****");
 
 		return output;
 	}
