@@ -27,14 +27,14 @@ public class MapperHelper {
 
     protected ApplicationConfigurationService applicationConfigurationService;
 
-    public FinancingPlanBO createRequestQuoteScheduleRimacLife (FinancingPlanDTO financingPlanDTO) {
+    public FinancingPlanBO createRequestQuoteScheduleRimacLife (FinancingPlanDTO financingPlanDTO,String productShortDesc) {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
         FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
 
         List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamientoLife(installment)).collect(Collectors.toList());
 
         financiamientoPayloadBO.setFinanciamiento(financiamiento);
-        financiamientoPayloadBO.setProducto(PISDConstants.ProductEasyYesLife.EASY_YES_RIMAC);
+        financiamientoPayloadBO.setProducto(productShortDesc);
 
         requestRimac.setPayload(financiamientoPayloadBO);
         return requestRimac;
@@ -60,13 +60,13 @@ public class MapperHelper {
         return requestRimac;
     }
 
-    public FinancingPlanBO createRequestPaymentScheduleRimacLifeEasyYes(FinancingPlanDTO financingPlanDTO) {
+    public FinancingPlanBO createRequestPaymentScheduleRimacLifeEasyYes(FinancingPlanDTO financingPlanDTO,String productShortDesc) {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
         FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
         List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCronogramaFinanciamientoLife(installment)).collect(Collectors.toList());
 
         financiamientoPayloadBO.setFinanciamiento(financiamiento);
-        financiamientoPayloadBO.setProducto(PISDConstants.ProductEasyYesLife.EASY_YES_RIMAC);
+        financiamientoPayloadBO.setProducto(productShortDesc);
         requestRimac.setPayload(financiamientoPayloadBO);
         return requestRimac;
     }

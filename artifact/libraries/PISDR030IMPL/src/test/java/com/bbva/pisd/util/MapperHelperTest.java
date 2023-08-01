@@ -118,7 +118,7 @@ public class MapperHelperTest {
     public void createQuoteScheduleRequestRimacLife() throws IOException{
         FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
 
-        FinancingPlanBO requestRimac = mapperHelper.createRequestQuoteScheduleRimacLife(request);
+        FinancingPlanBO requestRimac = mapperHelper.createRequestQuoteScheduleRimacLife(request,"EASYYES");
         assertNotNull(requestRimac.getPayload());
     }
 
@@ -166,7 +166,7 @@ public class MapperHelperTest {
     @Test
     public void createRequestPaymentScheduleRimacLifeEasyYes_MontlyFrequency(){
         FinancingPlanDTO request = this.requestTrxMonthlyFrquency();
-        FinancingPlanBO requestRimac = mapperHelper.createRequestPaymentScheduleRimacLifeEasyYes(request);
+        FinancingPlanBO requestRimac = mapperHelper.createRequestPaymentScheduleRimacLifeEasyYes(request,"EASYYES");
 
         assertNotNull(requestRimac.getPayload());
         assertNotNull(requestRimac.getPayload().getProducto());
@@ -180,7 +180,7 @@ public class MapperHelperTest {
     @Test
     public void createRequestPaymentScheduleRimacLifeEasyYes_AnnualFrequency(){
         FinancingPlanDTO request = this.requestTrxAnnualFrequency();
-        FinancingPlanBO requestRimac = mapperHelper.createRequestPaymentScheduleRimacLifeEasyYes(request);
+        FinancingPlanBO requestRimac = mapperHelper.createRequestPaymentScheduleRimacLifeEasyYes(request,"EASYYES");
 
         assertNotNull(requestRimac.getPayload());
         assertNotNull(requestRimac.getPayload().getProducto());

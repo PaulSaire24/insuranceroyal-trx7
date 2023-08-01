@@ -267,6 +267,8 @@ public class PISDR030Test {
 		responseQueryGetQuotationService.put(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue(), "840");
 		responseQueryGetQuotationService.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), "01");
 		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue(), "1f142c09-640d-4173-8a3d-6d2b24mf4e93");
+		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue(),"VIDA");
+		responseQueryGetQuotationService.put("PRODUCT_SHORT_DESC","EASYYES");
 
 		FinancingPlanDTO responseSchedule = new FinancingPlanDTO();
 		responseSchedule.setStartDate(new LocalDate());
