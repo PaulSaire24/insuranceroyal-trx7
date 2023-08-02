@@ -13,6 +13,7 @@ import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.lib.r012.PISDR012;
 import com.bbva.pisd.lib.r020.PISDR020;
 import com.bbva.pisd.lib.r030.impl.PISDR030Impl;
+import com.bbva.pisd.lib.r030.impl.pattern.PropertiesSingleton;
 import com.bbva.pisd.lib.r030.impl.util.MapperHelper;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -28,8 +29,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -311,6 +311,16 @@ public class PISDR030Test {
 		financingPlanDTO.setStartDate(new LocalDate());
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 		assertNull(validation);
+	}
+
+	@Test
+	public void testApplicationConfig(){
+		PropertiesSingleton.setApplicationConfigurationService(applicationConfigurationService);
+
+		String value = PropertiesSingleton.getValue("ARRAY_PERIOD");
+
+		assertNotNull(value);
+		assertEquals("ANNUAL,BIMONTHLY,MONTHLY,SEMIANNUAL,QUARTERLY",value);
 	}
 
 

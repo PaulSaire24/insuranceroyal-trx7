@@ -11,7 +11,6 @@ import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.commons.PaymentPeriodDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
 import com.bbva.pisd.dto.insurance.policy.PaymentAmountDTO;
-import com.bbva.pisd.dto.insurance.utils.PISDConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
@@ -22,10 +21,12 @@ import java.util.stream.Collectors;
 
 public class MapperHelper {
 
-    private final String RIMAC = "RIMAC";
-    private final String CUOTA = "CUOTA";
+
 
     protected ApplicationConfigurationService applicationConfigurationService;
+
+
+    /*
 
     public FinancingPlanBO createRequestQuoteScheduleRimacLife (FinancingPlanDTO financingPlanDTO,String productShortDesc) {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
@@ -51,26 +52,19 @@ public class MapperHelper {
         return requestRimac;
     }
 
-    public FinancingPlanBO createRequestPaymentScheduleRimac (FinancingPlanDTO financingPlanDTO) {
-        FinancingPlanBO requestRimac = new FinancingPlanBO();
-        FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
-        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamiento(installment, financingPlanDTO)).collect(Collectors.toList());
-        financiamientoPayloadBO.setFinanciamiento(financiamiento);
-        requestRimac.setPayload(financiamientoPayloadBO);
-        return requestRimac;
-    }
 
-    public FinancingPlanBO createRequestPaymentScheduleRimacLifeEasyYes(FinancingPlanDTO financingPlanDTO,String productShortDesc) {
+    public FinancingPlanBO createRequestPaymentScheduleRimacLife(FinancingPlanDTO request,String productShortDesc) {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
         FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
-        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCronogramaFinanciamientoLife(installment)).collect(Collectors.toList());
+        List<FinanciamientoBO> financiamiento = request.getInstallmentPlans().stream().map(this::createCronogramaFinanciamientoLife).collect(Collectors.toList());
 
         financiamientoPayloadBO.setFinanciamiento(financiamiento);
         financiamientoPayloadBO.setProducto(productShortDesc);
         requestRimac.setPayload(financiamientoPayloadBO);
         return requestRimac;
-    }
+    }*/
 
+    /*
     private FinanciamientoBO createCuotaFinanciamiento (InstallmentsDTO installmentsDTO, FinancingPlanDTO financingPlanDTO) {
         FinanciamientoBO financiamientoBO = new FinanciamientoBO();
         String frecuencia =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
@@ -79,8 +73,9 @@ public class MapperHelper {
         financiamientoBO.setNumeroCuotas(Long.parseLong(numeroCuotas));
         financiamientoBO.setFechaInicio(financingPlanDTO.getStartDate());
         return financiamientoBO;
-    }
+    }*/
 
+    /*
     private FinanciamientoBO createCronogramaFinanciamientoLife (InstallmentsDTO installmentsDTO) {
         FinanciamientoBO financiamientoBO = new FinanciamientoBO();
         String frecuencia =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
@@ -106,7 +101,7 @@ public class MapperHelper {
         financiamientoBO.setPeriodo(periodoId);
         financiamientoBO.setNumeroCuotas(Long.parseLong(nroCuotas));
         return financiamientoBO;
-    }
+    }*/
 
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();
@@ -136,7 +131,7 @@ public class MapperHelper {
         List<InstallmentsDTO> installmentsDTOS = new ArrayList<>();
         InstallmentsDTO installmentsDTO = new InstallmentsDTO();
 
-        String totalNumberInstallments = this.applicationConfigurationService.getProperty(CUOTA + request.getInstallmentPlans().get(0).getPeriod().getId());
+        String totalNumberInstallments = this.applicationConfigurationService.getProperty(Constants.CUOTA + request.getInstallmentPlans().get(0).getPeriod().getId());
         installmentsDTO.setTotalNumberInstallments(Long.parseLong(totalNumberInstallments));
 
         PaymentPeriodDTO period = new PaymentPeriodDTO();
