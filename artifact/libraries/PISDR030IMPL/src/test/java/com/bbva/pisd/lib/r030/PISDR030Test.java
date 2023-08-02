@@ -52,7 +52,6 @@ public class PISDR030Test {
 	private PISDR012 pisdr012;
 
 	private FinancingPlanDTO input;
-	private FinancingPlanDTO entityOut;
 
 	private Map<String, Object> responseQueryGetQuotationService;
 
@@ -86,8 +85,17 @@ public class PISDR030Test {
 
 		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue())).thenReturn("9a64a5ed-509f-4baa-88e3-a0e373b49e65");
 		when(responseQueryGetQuotationService.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue())).thenReturn("830");
+		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue())).thenReturn("VEHICULAR");
+		when(responseQueryGetQuotationService.get("PRODUCT_SHORT_DESC")).thenReturn("VEHICULAR");
 
-		entityOut = mock(FinancingPlanDTO.class);
+		PropertiesSingleton.setApplicationConfigurationService(applicationConfigurationService);
+		when(PropertiesSingleton.getValue("RIMACMONTHLY")).thenReturn("M");
+		when(PropertiesSingleton.getValue("CUOTAMONTHLY")).thenReturn("12");
+		when(PropertiesSingleton.getValue("RIMACANNUAL")).thenReturn("A");
+		when(PropertiesSingleton.getValue("CUOTAANNUAL")).thenReturn("1");
+		when(PropertiesSingleton.getValue("RIMACSEMIANNUAL")).thenReturn("R");
+		when(PropertiesSingleton.getValue("CUOTASEMIANNUAL")).thenReturn("2");
+
 
 	}
 
@@ -136,6 +144,8 @@ public class PISDR030Test {
 
 		when(responseQueryGetQuotationService1.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue())).thenReturn("9a64a5ed-509f-4baa-88e3-a0e373b49e65");
 		when(responseQueryGetQuotationService1.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue())).thenReturn("840");
+		when(responseQueryGetQuotationService1.get(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue())).thenReturn("VIDA");
+		when(responseQueryGetQuotationService1.get("PRODUCT_SHORT_DESC")).thenReturn("EASYYES");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService1);
 
@@ -207,6 +217,8 @@ public class PISDR030Test {
 		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue(), "833");
 		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), "07");
 		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue(), "12345678");
+		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue(),"VEHICULAR");
+		responseExecuteRegisterAdditionalCompanyQuotaId.put("PRODUCT_SHORT_DESC","VEHICULAR");
 
 		FinancingPlanBO response = new FinancingPlanBO();
 		response.setPayload(new FinanciamientoPayloadBO());
@@ -303,6 +315,8 @@ public class PISDR030Test {
 		responseQueryGetQuotationService.put(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue(), "840");
 		responseQueryGetQuotationService.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), "01");
 		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue(), "1f142c09-640d-4173-8a3d-6d2b24mf4e93");
+		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue(), "VIDA");
+		responseQueryGetQuotationService.put("PRODUCT_SHORT_DESC", "VIDADINAMICO");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 		when(pisdr020.executePaymentScheduleLife(anyObject(), anyObject(), anyString(), anyString())).thenReturn(null);
@@ -315,7 +329,6 @@ public class PISDR030Test {
 
 	@Test
 	public void testApplicationConfig(){
-		PropertiesSingleton.setApplicationConfigurationService(applicationConfigurationService);
 
 		String value = PropertiesSingleton.getValue("ARRAY_PERIOD");
 
