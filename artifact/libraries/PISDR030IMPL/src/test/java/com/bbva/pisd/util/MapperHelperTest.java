@@ -1,7 +1,6 @@
 package com.bbva.pisd.util;
 
 import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
-import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoLifeBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
@@ -22,7 +21,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -114,34 +112,6 @@ public class MapperHelperTest {
         return financingPlanDTO;
     }
 
-    /*
-    @Test
-    public void createQuoteScheduleRequestRimacLife() throws IOException{
-        FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
-
-        FinancingPlanBO requestRimac = mapperHelper.createRequestQuoteScheduleRimacLife(request,"EASYYES");
-        assertNotNull(requestRimac.getPayload());
-    }
-
-    @Test
-    public void createQuoteScheduleRequestRimac() throws IOException{
-        FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
-        QuotDetailDAO quotDetailDAO = new QuotDetailDAO();
-        quotDetailDAO.setRimacId("c9debdc9-d7e1-4464-8b3a-990c17eb9f48");
-        FinancingPlanBO requestRimac = mapperHelper.createRequestQuoteScheduleRimac(request,quotDetailDAO);
-        assertNotNull(requestRimac.getPayload());
-    }
-
-    @Test
-    public void createPaymentScheduleRequestRimac() throws IOException{
-        FinancingPlanDTO request = mockDTO.getSimulateInsuranceQuotationInstallmentPlanRequest();
-        request.setStartDate(new LocalDate().plusDays(2));
-        QuotDetailDAO quotDetailDAO = new QuotDetailDAO();
-        quotDetailDAO.setRimacId("c9debdc9-d7e1-4464-8b3a-990c17eb9f48");
-        //FinancingPlanBO requestRimac = mapperHelper.createRequestPaymentScheduleRimac(request);
-        //assertNotNull(requestRimac.getPayload());
-    }
-
 
     @Test
     public void mapSimulateInsuranceQuotationInstallmentPlanResponseValues() throws IOException {
@@ -163,36 +133,6 @@ public class MapperHelperTest {
         assertNotNull(output.getInstallmentPlans());
     }
 
-
-    @Test
-    public void createRequestPaymentScheduleRimacLifeEasyYes_MontlyFrequency(){
-        FinancingPlanDTO request = this.requestTrxMonthlyFrquency();
-        FinancingPlanBO requestRimac = mapperHelper.createRequestPaymentScheduleRimacLife(request,"EASYYES");
-
-        assertNotNull(requestRimac.getPayload());
-        assertNotNull(requestRimac.getPayload().getProducto());
-        assertNotNull(requestRimac.getPayload().getFinanciamiento());
-        assertNotNull(requestRimac.getPayload().getFinanciamiento().get(0).getFrecuencia());
-        assertNotNull(requestRimac.getPayload().getFinanciamiento().get(0).getNumeroCuotas());
-        assertEquals("M",requestRimac.getPayload().getFinanciamiento().get(0).getFrecuencia());
-        assertEquals(new Long(12),requestRimac.getPayload().getFinanciamiento().get(0).getNumeroCuotas());
-    }
-
-    @Test
-    public void createRequestPaymentScheduleRimacLifeEasyYes_AnnualFrequency(){
-        FinancingPlanDTO request = this.requestTrxAnnualFrequency();
-        FinancingPlanBO requestRimac = mapperHelper.createRequestPaymentScheduleRimacLife(request,"EASYYES");
-
-        assertNotNull(requestRimac.getPayload());
-        assertNotNull(requestRimac.getPayload().getProducto());
-        assertNotNull(requestRimac.getPayload().getFinanciamiento());
-        assertNotNull(requestRimac.getPayload().getFinanciamiento().get(0).getFrecuencia());
-        assertNotNull(requestRimac.getPayload().getFinanciamiento().get(0).getNumeroCuotas());
-        assertEquals("A",requestRimac.getPayload().getFinanciamiento().get(0).getFrecuencia());
-        assertEquals(new Long(1),requestRimac.getPayload().getFinanciamiento().get(0).getNumeroCuotas());
-    }
-
-
     @Test
     public void mapSimulatePaymentScheduleLifeEasyYesResponse_MonthlyFrequency() throws IOException{
         FinancingPlanDTO request = this.requestTrxMonthlyFrquency();
@@ -203,7 +143,6 @@ public class MapperHelperTest {
         assertNotNull(output.getMaturityDate());
         assertNotNull(output.getInstallmentPlans());
 
-    }*/
-
+    }
 
 }

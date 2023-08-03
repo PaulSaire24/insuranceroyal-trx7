@@ -1,10 +1,8 @@
 package com.bbva.pisd.lib.r030.impl.util;
 
 import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
-import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoBO;
-import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.bo.financing.CronogramaPagoLifeBO;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
@@ -21,87 +19,8 @@ import java.util.stream.Collectors;
 
 public class MapperHelper {
 
-
-
     protected ApplicationConfigurationService applicationConfigurationService;
 
-
-    /*
-
-    public FinancingPlanBO createRequestQuoteScheduleRimacLife (FinancingPlanDTO financingPlanDTO,String productShortDesc) {
-        FinancingPlanBO requestRimac = new FinancingPlanBO();
-        FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
-
-        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamientoLife(installment)).collect(Collectors.toList());
-
-        financiamientoPayloadBO.setFinanciamiento(financiamiento);
-        financiamientoPayloadBO.setProducto(productShortDesc);
-
-        requestRimac.setPayload(financiamientoPayloadBO);
-        return requestRimac;
-    }
-
-    public FinancingPlanBO createRequestQuoteScheduleRimac (FinancingPlanDTO financingPlanDTO, QuotDetailDAO quotDetailDAO) {
-        FinancingPlanBO requestRimac = new FinancingPlanBO();
-        FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
-        List<FinanciamientoBO> financiamiento = financingPlanDTO.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamiento(installment)).collect(Collectors.toList());
-        financiamientoPayloadBO.setFinanciamiento(financiamiento);
-        financiamientoPayloadBO.setCotizacion(quotDetailDAO.getRimacId());
-        financiamientoPayloadBO.setFechaInicioFinanciamiento(financingPlanDTO.getStartDate());
-        requestRimac.setPayload(financiamientoPayloadBO);
-        return requestRimac;
-    }
-
-
-    public FinancingPlanBO createRequestPaymentScheduleRimacLife(FinancingPlanDTO request,String productShortDesc) {
-        FinancingPlanBO requestRimac = new FinancingPlanBO();
-        FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
-        List<FinanciamientoBO> financiamiento = request.getInstallmentPlans().stream().map(this::createCronogramaFinanciamientoLife).collect(Collectors.toList());
-
-        financiamientoPayloadBO.setFinanciamiento(financiamiento);
-        financiamientoPayloadBO.setProducto(productShortDesc);
-        requestRimac.setPayload(financiamientoPayloadBO);
-        return requestRimac;
-    }*/
-
-    /*
-    private FinanciamientoBO createCuotaFinanciamiento (InstallmentsDTO installmentsDTO, FinancingPlanDTO financingPlanDTO) {
-        FinanciamientoBO financiamientoBO = new FinanciamientoBO();
-        String frecuencia =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
-        String numeroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
-        financiamientoBO.setFrecuencia(frecuencia);
-        financiamientoBO.setNumeroCuotas(Long.parseLong(numeroCuotas));
-        financiamientoBO.setFechaInicio(financingPlanDTO.getStartDate());
-        return financiamientoBO;
-    }*/
-
-    /*
-    private FinanciamientoBO createCronogramaFinanciamientoLife (InstallmentsDTO installmentsDTO) {
-        FinanciamientoBO financiamientoBO = new FinanciamientoBO();
-        String frecuencia =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
-        String numeroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
-        financiamientoBO.setFrecuencia(frecuencia);
-        financiamientoBO.setNumeroCuotas(Long.parseLong(numeroCuotas));
-        return financiamientoBO;
-    }
-
-    private FinanciamientoBO createCuotaFinanciamiento (InstallmentsDTO installmentsDTO) {
-        FinanciamientoBO financiamientoBO = new FinanciamientoBO();
-        String periodoId =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
-        String nroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
-        financiamientoBO.setPeriodo(periodoId);
-        financiamientoBO.setNroCuotas(Long.parseLong(nroCuotas));
-        return financiamientoBO;
-    }
-
-    private FinanciamientoBO createCuotaFinanciamientoLife (InstallmentsDTO installmentsDTO) {
-        FinanciamientoBO financiamientoBO = new FinanciamientoBO();
-        String periodoId =  this.applicationConfigurationService.getProperty(RIMAC + installmentsDTO.getPeriod().getId());
-        String nroCuotas =  this.applicationConfigurationService.getProperty(CUOTA + installmentsDTO.getPeriod().getId());
-        financiamientoBO.setPeriodo(periodoId);
-        financiamientoBO.setNumeroCuotas(Long.parseLong(nroCuotas));
-        return financiamientoBO;
-    }*/
 
     public FinancingPlanDTO mapSimulateInsuranceQuotationInstallmentPlanResponseValues(FinancingPlanBO responseRimac) {
         FinancingPlanDTO response = new FinancingPlanDTO();

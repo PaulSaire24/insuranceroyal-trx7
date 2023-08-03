@@ -1,6 +1,5 @@
 package com.bbva.pisd.lib.r030.impl.factory;
 
-import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
@@ -15,18 +14,18 @@ import java.util.stream.Collectors;
 
 public class RequestLife extends RequestSchedule {
 
-    private String productShortDesc;
+    private final String productShortDesc;
 
     public RequestLife(String productShortDesc) {
         this.productShortDesc = productShortDesc;
     }
 
     @Override
-    public FinancingPlanBO createRequestCalculateQuoteRimac(FinancingPlanDTO input, QuotDetailDAO quotationDetails, ApplicationConfigurationService applicationConfigurationService) {
+    public FinancingPlanBO createRequestCalculateQuoteRimac(FinancingPlanDTO input, QuotDetailDAO quotationDetails) {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
         FinanciamientoPayloadBO financiamientoPayloadBO = new FinanciamientoPayloadBO();
 
-        List<FinanciamientoBO> financiamiento = input.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamientoLife(installment,applicationConfigurationService)).collect(Collectors.toList());
+        List<FinanciamientoBO> financiamiento = input.getInstallmentPlans().stream().map(installment -> createCuotaFinanciamientoLife(installment)).collect(Collectors.toList());
 
         financiamientoPayloadBO.setFinanciamiento(financiamiento);
         financiamientoPayloadBO.setProducto(this.productShortDesc);
@@ -57,10 +56,10 @@ public class RequestLife extends RequestSchedule {
         return financiamientoBO;
     }
 
-    private FinanciamientoBO createCuotaFinanciamientoLife (InstallmentsDTO installmentsDTO,ApplicationConfigurationService applicationConfigurationService) {
+    private FinanciamientoBO createCuotaFinanciamientoLife (InstallmentsDTO installmentsDTO) {
         FinanciamientoBO financiamientoBO = new FinanciamientoBO();
-        String periodoId =  applicationConfigurationService.getProperty(Constants.RIMAC + installmentsDTO.getPeriod().getId());
-        String nroCuotas =  applicationConfigurationService.getProperty(Constants.CUOTA + installmentsDTO.getPeriod().getId());
+        String periodoId =  PropertiesSingleton.getValue(Constants.RIMAC + installmentsDTO.getPeriod().getId());
+        String nroCuotas =  PropertiesSingleton.getValue(Constants.CUOTA + installmentsDTO.getPeriod().getId());
         financiamientoBO.setPeriodo(periodoId);
         financiamientoBO.setNumeroCuotas(Long.parseLong(nroCuotas));
         return financiamientoBO;

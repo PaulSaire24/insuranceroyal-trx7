@@ -77,7 +77,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 		LOGGER.info("***** PISDR030Impl - executeQuoteSchedule *****");
 
 		RequestSchedule calculateQuote = FactoryRequestQuotation.getRequestRimac(insuranceBusinessName,productShortDesc);
-		FinancingPlanBO requestRimac = calculateQuote.createRequestCalculateQuoteRimac(input,quotationDetails,this.applicationConfigurationService);
+		FinancingPlanBO requestRimac = calculateQuote.createRequestCalculateQuoteRimac(input,quotationDetails);
 
 		FinancingPlanBO responseRimac = this.pisdR020.executeQuoteSchedule(requestRimac, input.getTraceId(), productId, quotationDetails.getRimacId());
 		LOGGER.info("***** PISDR030Impl - validate SimulateInsuranceQuotationInstallmentPlan Service response *****");

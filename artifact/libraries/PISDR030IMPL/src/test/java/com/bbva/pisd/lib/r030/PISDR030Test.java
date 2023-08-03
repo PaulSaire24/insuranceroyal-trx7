@@ -336,5 +336,58 @@ public class PISDR030Test {
 		assertEquals("ANNUAL,BIMONTHLY,MONTHLY,SEMIANNUAL,QUARTERLY",value);
 	}
 
+	private static FinancingPlanDTO generateInputRequest(){
+		FinancingPlanDTO request = new FinancingPlanDTO();
+
+		request.setQuotationId("quotationid");
+		InstallmentsDTO monthly = new InstallmentsDTO();
+		PaymentPeriodDTO paymentM = new PaymentPeriodDTO();
+		paymentM.setId("MONTHLY");
+		monthly.setPeriod(paymentM);
+		InstallmentsDTO annual = new InstallmentsDTO();
+		PaymentPeriodDTO paymentA = new PaymentPeriodDTO();
+		paymentA.setId("ANNUAL");
+		annual.setPeriod(paymentA);
+		List<InstallmentsDTO> list = new ArrayList<>();
+		list.add(monthly);
+		list.add(annual);
+		request.setInstallmentPlans(list);
+
+		return request;
+	}
+
+	@Test
+	public void testExecuteCalculateQuoteLife_OK() throws IOException{
+
+		when(responseQueryGetQuotationService.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue())).thenReturn("841");
+		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue())).thenReturn("VIDA");
+		when(responseQueryGetQuotationService.get("PRODUCT_SHORT_DESC")).thenReturn("VIDADINAMICO");
+		when(this.pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+
+		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+		financingPlanDTO.setQuotationId("12345678");
+		financingPlanDTO.setStartDate(new LocalDate("2023-05-06"));
+		financingPlanDTO.setMaturityDate(new LocalDate("2023-05-07"));
+		financingPlanDTO.setInstallmentPlans(new ArrayList<>());
+		financingPlanDTO.getInstallmentPlans().add(new InstallmentsDTO());
+		financingPlanDTO.getInstallmentPlans().get(0).setPeriod(new PaymentPeriodDTO());
+		financingPlanDTO.getInstallmentPlans().get(0).getPeriod().setId("MONTHLY");
+		financingPlanDTO.getInstallmentPlans().get(0).setPaymentAmount(new PaymentAmountDTO());
+		financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().setAmount(10.00);
+		financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().setCurrency("PEN");
+		when(mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(anyObject())).thenReturn(financingPlanDTO);
+
+		FinancingPlanBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
+		when(pisdr020.executeQuoteSchedule(anyObject(), anyString(), anyString(), anyString())).thenReturn(responseRimac);
+
+		FinancingPlanDTO input = generateInputRequest();
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+
+		assertNotNull(validation);
+		assertNotNull(validation.getMaturityDate());
+		assertNotNull(validation.getStartDate());
+		assertNotNull(validation.getInstallmentPlans());
+	}
+
 
 }

@@ -4,6 +4,8 @@ import com.bbva.pisd.lib.r030.impl.util.Constants;
 
 public class FactoryRequestQuotation {
 
+    private FactoryRequestQuotation(){}
+
     public static RequestSchedule getRequestRimac(String insuranceBusinessName, String productShortDesc){
         if(insuranceBusinessName.equals(Constants.BUSINESS_NAME_VIDA)){
             return new RequestLife(productShortDesc);
