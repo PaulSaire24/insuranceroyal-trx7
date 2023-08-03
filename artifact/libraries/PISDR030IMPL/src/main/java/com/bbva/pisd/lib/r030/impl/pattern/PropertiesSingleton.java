@@ -2,9 +2,9 @@ package com.bbva.pisd.lib.r030.impl.pattern;
 
 import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 
-public final class PropertiesSingleton {
+public class PropertiesSingleton {
 
-    private static ApplicationConfigurationService applicationConfigurationService;
+    protected static ApplicationConfigurationService applicationConfigurationService;
 
     private PropertiesSingleton(){}
 
