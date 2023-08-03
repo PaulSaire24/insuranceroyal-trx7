@@ -1,16 +1,17 @@
 package com.bbva.pisd.lib.r030.impl.factory;
 
+import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.pisd.lib.r030.impl.util.Constants;
 
 public class FactoryRequestQuotation {
 
     private FactoryRequestQuotation(){}
 
-    public static RequestSchedule getRequestRimac(String insuranceBusinessName, String productShortDesc){
+    public static RequestSchedule getRequestRimac(String insuranceBusinessName, String productShortDesc, ApplicationConfigurationService applicationConfigurationService){
         if(insuranceBusinessName.equals(Constants.BUSINESS_NAME_VIDA)){
-            return new RequestLife(productShortDesc);
+            return new RequestLife(productShortDesc,applicationConfigurationService);
         }else{
-            return new RequestNoLife();
+            return new RequestNoLife(applicationConfigurationService);
         }
     }
 

@@ -11,7 +11,6 @@ import com.bbva.pisd.dto.insurance.utils.PISDValidation;
 import com.bbva.pisd.lib.r030.impl.factory.RequestSchedule;
 import com.bbva.pisd.lib.r030.impl.factory.FactoryRequestQuotation;
 import com.bbva.pisd.lib.r030.impl.mapper.map.QuotationModMap;
-import com.bbva.pisd.lib.r030.impl.pattern.PropertiesSingleton;
 import com.bbva.pisd.lib.r030.impl.util.Constants;
 import com.bbva.pisd.lib.r030.impl.util.ValidationUtil;
 import org.apache.commons.lang.StringUtils;
@@ -46,7 +45,6 @@ public class PISDR030Impl extends PISDR030Abstract {
 		try {
 
 			LOGGER.info("***** PISDR030Impl - executeSimulateInsuranceQuotationInstallmentPlan | validatePeriod *****");
-			PropertiesSingleton.setApplicationConfigurationService(applicationConfigurationService);
 
 			validatePeriod(input);
 
@@ -76,7 +74,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 
 		LOGGER.info("***** PISDR030Impl - executeQuoteSchedule *****");
 
-		RequestSchedule calculateQuote = FactoryRequestQuotation.getRequestRimac(insuranceBusinessName,productShortDesc);
+		RequestSchedule calculateQuote = FactoryRequestQuotation.getRequestRimac(insuranceBusinessName,productShortDesc,this.applicationConfigurationService);
 		FinancingPlanBO requestRimac = calculateQuote.createRequestCalculateQuoteRimac(input,quotationDetails);
 
 		FinancingPlanBO responseRimac = this.pisdR020.executeQuoteSchedule(requestRimac, input.getTraceId(), productId, quotationDetails.getRimacId());
@@ -91,7 +89,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 
 		LOGGER.info("***** PISDR030Impl - executePaymentSchedule *****");
 
-		RequestSchedule requestSchedule = FactoryRequestQuotation.getRequestRimac(insuranceBusinessName,productShortDesc);
+		RequestSchedule requestSchedule = FactoryRequestQuotation.getRequestRimac(insuranceBusinessName,productShortDesc,this.applicationConfigurationService);
 		FinancingPlanBO requestRimac = requestSchedule.createRequestPaymentScheduleRimac(input);
 
 		if(isLifeProduct(insuranceBusinessName)) {

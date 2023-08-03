@@ -13,13 +13,11 @@ import com.bbva.pisd.dto.insurance.utils.PISDProperties;
 import com.bbva.pisd.lib.r012.PISDR012;
 import com.bbva.pisd.lib.r020.PISDR020;
 import com.bbva.pisd.lib.r030.impl.PISDR030Impl;
-import com.bbva.pisd.lib.r030.impl.pattern.PropertiesSingleton;
 import com.bbva.pisd.lib.r030.impl.util.MapperHelper;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.cglib.core.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -88,14 +86,12 @@ public class PISDR030Test {
 		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue())).thenReturn("VEHICULAR");
 		when(responseQueryGetQuotationService.get("PRODUCT_SHORT_DESC")).thenReturn("VEHICULAR");
 
-		PropertiesSingleton.setApplicationConfigurationService(applicationConfigurationService);
-		when(PropertiesSingleton.getValue("RIMACMONTHLY")).thenReturn("M");
-		when(PropertiesSingleton.getValue("CUOTAMONTHLY")).thenReturn("12");
-		when(PropertiesSingleton.getValue("RIMACANNUAL")).thenReturn("A");
-		when(PropertiesSingleton.getValue("CUOTAANNUAL")).thenReturn("1");
-		when(PropertiesSingleton.getValue("RIMACSEMIANNUAL")).thenReturn("R");
-		when(PropertiesSingleton.getValue("CUOTASEMIANNUAL")).thenReturn("2");
-
+		when(this.applicationConfigurationService.getProperty("CUOTAMONTHLY")).thenReturn("12");
+		when(this.applicationConfigurationService.getProperty("CUOTAANNUAL")).thenReturn("1");
+		when(this.applicationConfigurationService.getProperty("CUOTASEMIANNUAL")).thenReturn("2");
+		when(this.applicationConfigurationService.getProperty("RIMACMONTHLY")).thenReturn("M");
+		when(this.applicationConfigurationService.getProperty("RIMACANNUAL")).thenReturn("A");
+		when(this.applicationConfigurationService.getProperty("RIMACSEMIANNUAL")).thenReturn("R");
 
 	}
 
@@ -325,15 +321,6 @@ public class PISDR030Test {
 		financingPlanDTO.setStartDate(new LocalDate());
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 		assertNull(validation);
-	}
-
-	@Test
-	public void testApplicationConfig(){
-
-		String value = PropertiesSingleton.getValue("ARRAY_PERIOD");
-
-		assertNotNull(value);
-		assertEquals("ANNUAL,BIMONTHLY,MONTHLY,SEMIANNUAL,QUARTERLY",value);
 	}
 
 	private static FinancingPlanDTO generateInputRequest(){

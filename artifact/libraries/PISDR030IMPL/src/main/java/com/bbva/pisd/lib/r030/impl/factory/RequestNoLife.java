@@ -1,12 +1,12 @@
 package com.bbva.pisd.lib.r030.impl.factory;
 
+import com.bbva.elara.configuration.manager.application.ApplicationConfigurationService;
 import com.bbva.pisd.dto.insurance.aso.quotdetail.QuotDetailDAO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinanciamientoPayloadBO;
 import com.bbva.pisd.dto.insurance.bo.financing.FinancingPlanBO;
 import com.bbva.pisd.dto.insurance.commons.InstallmentsDTO;
 import com.bbva.pisd.dto.insurance.financing.FinancingPlanDTO;
-import com.bbva.pisd.lib.r030.impl.pattern.PropertiesSingleton;
 import com.bbva.pisd.lib.r030.impl.util.Constants;
 
 import java.util.List;
@@ -14,6 +14,11 @@ import java.util.stream.Collectors;
 
 public class RequestNoLife extends RequestSchedule {
 
+    private ApplicationConfigurationService applicationConfigurationService;
+
+    public RequestNoLife(ApplicationConfigurationService applicationConfigurationService) {
+        this.applicationConfigurationService = applicationConfigurationService;
+    }
 
     public FinancingPlanBO createRequestCalculateQuoteRimac(FinancingPlanDTO input, QuotDetailDAO quotationDetails) {
         FinancingPlanBO requestRimac = new FinancingPlanBO();
@@ -39,8 +44,8 @@ public class RequestNoLife extends RequestSchedule {
 
     public FinanciamientoBO createCronogramaFinanciamientoLife(InstallmentsDTO installmentsDTO,FinancingPlanDTO input) {
         FinanciamientoBO financiamientoBO = new FinanciamientoBO();
-        String frecuencia = PropertiesSingleton.getValue(Constants.RIMAC + installmentsDTO.getPeriod().getId());
-        String numeroCuotas =  PropertiesSingleton.getValue(Constants.CUOTA + installmentsDTO.getPeriod().getId());
+        String frecuencia = this.applicationConfigurationService.getProperty(Constants.RIMAC + installmentsDTO.getPeriod().getId());
+        String numeroCuotas =  this.applicationConfigurationService.getProperty(Constants.CUOTA + installmentsDTO.getPeriod().getId());
         financiamientoBO.setFrecuencia(frecuencia);
         financiamientoBO.setNumeroCuotas(Long.parseLong(numeroCuotas));
         financiamientoBO.setFechaInicio(input.getStartDate());
@@ -49,8 +54,8 @@ public class RequestNoLife extends RequestSchedule {
 
     private FinanciamientoBO createCuotaFinanciamiento (InstallmentsDTO installmentsDTO) {
         FinanciamientoBO financiamientoBO = new FinanciamientoBO();
-        String periodoId =  PropertiesSingleton.getValue(Constants.RIMAC + installmentsDTO.getPeriod().getId());
-        String nroCuotas =  PropertiesSingleton.getValue(Constants.CUOTA + installmentsDTO.getPeriod().getId());
+        String periodoId =  this.applicationConfigurationService.getProperty(Constants.RIMAC + installmentsDTO.getPeriod().getId());
+        String nroCuotas =  this.applicationConfigurationService.getProperty(Constants.CUOTA + installmentsDTO.getPeriod().getId());
         financiamientoBO.setPeriodo(periodoId);
         financiamientoBO.setNroCuotas(Long.parseLong(nroCuotas));
         return financiamientoBO;
