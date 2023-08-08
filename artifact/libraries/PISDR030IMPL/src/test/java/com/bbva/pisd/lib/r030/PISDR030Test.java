@@ -18,7 +18,6 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.cglib.core.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,8 +27,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -52,7 +50,6 @@ public class PISDR030Test {
 	private PISDR012 pisdr012;
 
 	private FinancingPlanDTO input;
-	private FinancingPlanDTO entityOut;
 
 	private Map<String, Object> responseQueryGetQuotationService;
 
@@ -86,8 +83,15 @@ public class PISDR030Test {
 
 		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue())).thenReturn("9a64a5ed-509f-4baa-88e3-a0e373b49e65");
 		when(responseQueryGetQuotationService.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue())).thenReturn("830");
+		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue())).thenReturn("VEHICULAR");
+		when(responseQueryGetQuotationService.get("PRODUCT_SHORT_DESC")).thenReturn("VEHICULAR");
 
-		entityOut = mock(FinancingPlanDTO.class);
+		when(this.applicationConfigurationService.getProperty("CUOTAMONTHLY")).thenReturn("12");
+		when(this.applicationConfigurationService.getProperty("CUOTAANNUAL")).thenReturn("1");
+		when(this.applicationConfigurationService.getProperty("CUOTASEMIANNUAL")).thenReturn("2");
+		when(this.applicationConfigurationService.getProperty("RIMACMONTHLY")).thenReturn("M");
+		when(this.applicationConfigurationService.getProperty("RIMACANNUAL")).thenReturn("A");
+		when(this.applicationConfigurationService.getProperty("RIMACSEMIANNUAL")).thenReturn("R");
 
 	}
 
@@ -136,6 +140,8 @@ public class PISDR030Test {
 
 		when(responseQueryGetQuotationService1.get(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue())).thenReturn("9a64a5ed-509f-4baa-88e3-a0e373b49e65");
 		when(responseQueryGetQuotationService1.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue())).thenReturn("840");
+		when(responseQueryGetQuotationService1.get(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue())).thenReturn("VIDA");
+		when(responseQueryGetQuotationService1.get("PRODUCT_SHORT_DESC")).thenReturn("EASYYES");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService1);
 
@@ -207,6 +213,8 @@ public class PISDR030Test {
 		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue(), "833");
 		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), "07");
 		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue(), "12345678");
+		responseExecuteRegisterAdditionalCompanyQuotaId.put(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue(),"VEHICULAR");
+		responseExecuteRegisterAdditionalCompanyQuotaId.put("PRODUCT_SHORT_DESC","VEHICULAR");
 
 		FinancingPlanBO response = new FinancingPlanBO();
 		response.setPayload(new FinanciamientoPayloadBO());
@@ -267,6 +275,8 @@ public class PISDR030Test {
 		responseQueryGetQuotationService.put(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue(), "840");
 		responseQueryGetQuotationService.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), "01");
 		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue(), "1f142c09-640d-4173-8a3d-6d2b24mf4e93");
+		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue(),"VIDA");
+		responseQueryGetQuotationService.put("PRODUCT_SHORT_DESC","EASYYES");
 
 		FinancingPlanDTO responseSchedule = new FinancingPlanDTO();
 		responseSchedule.setStartDate(new LocalDate());
@@ -301,6 +311,8 @@ public class PISDR030Test {
 		responseQueryGetQuotationService.put(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue(), "840");
 		responseQueryGetQuotationService.put(PISDProperties.FIELD_OR_FILTER_INSURANCE_MODALITY_TYPE.getValue(), "01");
 		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_COMPANY_QUOTA_ID.getValue(), "1f142c09-640d-4173-8a3d-6d2b24mf4e93");
+		responseQueryGetQuotationService.put(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue(), "VIDA");
+		responseQueryGetQuotationService.put("PRODUCT_SHORT_DESC", "VIDADINAMICO");
 
 		when(pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
 		when(pisdr020.executePaymentScheduleLife(anyObject(), anyObject(), anyString(), anyString())).thenReturn(null);
@@ -309,6 +321,59 @@ public class PISDR030Test {
 		financingPlanDTO.setStartDate(new LocalDate());
 		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(financingPlanDTO);
 		assertNull(validation);
+	}
+
+	private static FinancingPlanDTO generateInputRequest(){
+		FinancingPlanDTO request = new FinancingPlanDTO();
+
+		request.setQuotationId("quotationid");
+		InstallmentsDTO monthly = new InstallmentsDTO();
+		PaymentPeriodDTO paymentM = new PaymentPeriodDTO();
+		paymentM.setId("MONTHLY");
+		monthly.setPeriod(paymentM);
+		InstallmentsDTO annual = new InstallmentsDTO();
+		PaymentPeriodDTO paymentA = new PaymentPeriodDTO();
+		paymentA.setId("ANNUAL");
+		annual.setPeriod(paymentA);
+		List<InstallmentsDTO> list = new ArrayList<>();
+		list.add(monthly);
+		list.add(annual);
+		request.setInstallmentPlans(list);
+
+		return request;
+	}
+
+	@Test
+	public void testExecuteCalculateQuoteLife_OK() throws IOException{
+
+		when(responseQueryGetQuotationService.get(PISDProperties.FILTER_INSURANCE_PRODUCT_TYPE.getValue())).thenReturn("841");
+		when(responseQueryGetQuotationService.get(PISDProperties.FIELD_INSURANCE_BUSINESS_NAME.getValue())).thenReturn("VIDA");
+		when(responseQueryGetQuotationService.get("PRODUCT_SHORT_DESC")).thenReturn("VIDADINAMICO");
+		when(this.pisdr012.executeRegisterAdditionalCompanyQuotaId(anyString())).thenReturn(responseQueryGetQuotationService);
+
+		FinancingPlanDTO financingPlanDTO = new FinancingPlanDTO();
+		financingPlanDTO.setQuotationId("12345678");
+		financingPlanDTO.setStartDate(new LocalDate("2023-05-06"));
+		financingPlanDTO.setMaturityDate(new LocalDate("2023-05-07"));
+		financingPlanDTO.setInstallmentPlans(new ArrayList<>());
+		financingPlanDTO.getInstallmentPlans().add(new InstallmentsDTO());
+		financingPlanDTO.getInstallmentPlans().get(0).setPeriod(new PaymentPeriodDTO());
+		financingPlanDTO.getInstallmentPlans().get(0).getPeriod().setId("MONTHLY");
+		financingPlanDTO.getInstallmentPlans().get(0).setPaymentAmount(new PaymentAmountDTO());
+		financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().setAmount(10.00);
+		financingPlanDTO.getInstallmentPlans().get(0).getPaymentAmount().setCurrency("PEN");
+		when(mapperHelper.mapSimulateInsuranceQuotationInstallmentPlanResponseValues(anyObject())).thenReturn(financingPlanDTO);
+
+		FinancingPlanBO responseRimac = mockDTO.getSimulateInsuranceQuotationInstallmentPlanResponseRimac();
+		when(pisdr020.executeQuoteSchedule(anyObject(), anyString(), anyString(), anyString())).thenReturn(responseRimac);
+
+		FinancingPlanDTO input = generateInputRequest();
+		FinancingPlanDTO validation = pisdr030.executeSimulateInsuranceQuotationInstallmentPlan(input);
+
+		assertNotNull(validation);
+		assertNotNull(validation.getMaturityDate());
+		assertNotNull(validation.getStartDate());
+		assertNotNull(validation.getInstallmentPlans());
 	}
 
 
