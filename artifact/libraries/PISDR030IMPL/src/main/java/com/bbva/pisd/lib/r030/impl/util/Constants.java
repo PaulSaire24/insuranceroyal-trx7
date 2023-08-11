@@ -6,6 +6,7 @@ public class Constants {
     public static final String CUOTA = "CUOTA";
     public static final String ARRAY_PERIOD = "ARRAY_PERIOD";
     public static final String BUSINESS_NAME_VIDA = "VIDA";
+    public static final String BUSINESS_NAME_FAKE_EASYYES = "EASYYES";
     public static final String FIELD_PRODUCT_SHORT_DESC = "PRODUCT_SHORT_DESC";
 
 }
