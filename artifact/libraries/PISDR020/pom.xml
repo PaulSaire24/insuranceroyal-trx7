@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>com.bbva.pisd</groupId>
 		<artifactId>LIBRARIES-insuranceroyal-trx7</artifactId>
-		<version>0.8.3</version>
+		<version>0.8.4</version>
 	</parent>
 	<groupId>com.bbva.pisd</groupId>
 	<artifactId>PISDR020</artifactId>
 	<name>PISDR020</name>
-	<version>0.8.3</version>
+	<version>0.8.4</version>
 	<packaging>bundle</packaging>
 	<description>Library to consume APIs</description>
 	<properties>
