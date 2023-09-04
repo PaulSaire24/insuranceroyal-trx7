@@ -10,8 +10,7 @@ public class FactoryRequestQuotation {
     private FactoryRequestQuotation(){}
 
     public static RequestSchedule getRequestRimac(String insuranceBusinessName, String productShortDesc, ApplicationConfigurationService applicationConfigurationService){
-        if(Objects.nonNull(insuranceBusinessName) && (
-                insuranceBusinessName.equals(Constants.BUSINESS_NAME_VIDA) || insuranceBusinessName.equals(Constants.BUSINESS_NAME_FAKE_EASYYES))){
+        if(Objects.nonNull(insuranceBusinessName) && insuranceBusinessName.equals(Constants.BUSINESS_NAME_VIDA)){
             return new RequestLife(productShortDesc,applicationConfigurationService);
         }else{
             return new RequestNoLife(applicationConfigurationService);

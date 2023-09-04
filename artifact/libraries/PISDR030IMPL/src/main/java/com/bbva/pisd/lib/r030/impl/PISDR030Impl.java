@@ -109,7 +109,7 @@ public class PISDR030Impl extends PISDR030Abstract {
 	}
 
 	private static boolean isLifeProduct(String insuranceBusinessName) {
-		return Objects.nonNull(insuranceBusinessName) && (insuranceBusinessName.equals(Constants.BUSINESS_NAME_VIDA) || insuranceBusinessName.equals(Constants.BUSINESS_NAME_FAKE_EASYYES));
+		return Objects.nonNull(insuranceBusinessName) && (insuranceBusinessName.equals(Constants.BUSINESS_NAME_VIDA));
 	}
 
 	public FinancingPlanDTO doQuoteOrSchedule(FinancingPlanDTO input, QuotDetailDAO quotationDetails, String productId, String modalityType, String insuranceBusinessName, String productShortDesc) {
